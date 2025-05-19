@@ -1,0 +1,143 @@
+.auth-container {
+  display: flex;
+  width: 800px; 
+  margin: 100px auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image-section {
+  flex: 1;
+  background-image: url('https://i.pinimg.com/originals/6a/ba/8d/6aba8d6fe7a455389b50d24cfbc84316.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.form-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  background-color: #ffffff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #333;
+}
+
+input {
+  margin: 10px 0;
+  padding: 14px; 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  width: calc(100% - 20px); 
+}
+
+input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+login-button {
+  margin: 10px 0;
+  padding: 9px; /* Giữ nguyên độ cao của nút */
+  background-color: black; /* Đổi thành màu đen */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%; /* Chiều rộng của nút */
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+/* button {
+display: flex;
+} */
+
+.button:hover {
+  background-color: #333; /* Màu đen nhạt hơn khi hover */
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.google-login-container {
+  display: flex; /* Sử dụng flexbox để canh giữa */
+  justify-content: center; /* Canh giữa nội dung */
+  margin-top: 20px;
+}
+
+.google-login-button {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: #db4437;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%; /* Chiều rộng của nút đăng nhập Google */
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.google-login-button:hover {
+  background-color: #c13525;
+}
+
+p {
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
+}
+
+span {
+  /* color: #4CAF50; */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+/* span:hover {
+  color: #388E3C;
+} */
+.account-link {
+  color: black; /* Đặt màu thành đen */
+  font-weight: bold; /* Làm cho văn bản trở nên đậm */
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    width: 100%; 
+    margin: 20px; 
+  }
+
+  input {
+    font-size: 14px; 
+  }
+
+  button {
+    font-size: 14px; 
+  }
+
+  .form-section {
+    padding: 20px; 
+  }
+
+  h2 {
+    font-size: 24px; 
+  }
+}

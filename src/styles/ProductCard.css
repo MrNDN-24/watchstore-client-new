@@ -1,0 +1,35 @@
+.card-link {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .card-image {
+    height: 250px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .card-category {
+    font-size: 0.875rem;
+    color: #6b7280; /* Màu xám tương tự Tailwind `text-grey-2` */
+  }
+  
+  .card-price-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-price {
+    font-size: 1rem;
+    font-weight: bold;
+  }
