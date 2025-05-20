@@ -8,7 +8,7 @@ import { createOrder } from "../services/orderService";
 import { toast, ToastContainer } from "react-toastify";
 import { validateDiscountForUser } from "../services/discountService";
 import "react-toastify/dist/ReactToastify.css";
-import { momoPayment } from "../services/paymentService";
+import { momoPayment, vnpayPayment } from "../services/paymentService";
 
 const CheckoutPage = () => {
   const [user, setUser] = useState();
@@ -57,11 +57,6 @@ const CheckoutPage = () => {
   };
 
   const handlePlaceOrder = async () => {
-    // console.log("Cờ address", addressSelectionMethod);
-    // if (addressSelectionMethod === "custom" && !customAddress) {
-    //   toast.error("Địa chỉ không được để trống. Vui lòng nhập địa chỉ.");
-    //   return; // Dừng hàm nếu không có địa chỉ
-    // }
     if (
       (addressSelectionMethod === "default" && !address) || // Nếu chọn địa chỉ mặc định nhưng không có địa chỉ
       (addressSelectionMethod === "custom" &&
@@ -86,7 +81,7 @@ const CheckoutPage = () => {
         })),
         total_price: totalAmount - discountAmount,
         address_id: address?._id,
-        customAddress: customAddress,
+        customAddress,
         deliveryStatus: "Chờ xử lý",
         isActive: true,
         isDelete: false,
@@ -98,23 +93,55 @@ const CheckoutPage = () => {
       // Gọi hàm createOrder từ service
       const response = await createOrder(orderData);
       console.log("Order created:", response.order._id);
-      if (selectedPaymentMethod === "Cash on Delivery") {
-        toast.success("Đặt hàng thành công");
-        // Điều hướng hoặc hiển thị thông báo thành công
+      // if (selectedPaymentMethod === "Cash on Delivery") {
+      //   toast.success("Đặt hàng thành công");
+      //   // Điều hướng hoặc hiển thị thông báo thành công
+      //   setTimeout(() => {
+      //     navigate("/order", { state: { orderId: response._id } });
+      //   }, 5000); // Đợi 10 giây (10000 milliseconds)
+      // }
+      // if (selectedPaymentMethod === "Bank Transfer") {
+      //   const momoResponse = await momoPayment(
+      //     response.order._id,
+      //     response.order.total_price
+      //   );
+
+      //   if (momoResponse?.data?.resultCode === 0) {
+      //     const payUrl = momoResponse.data.payUrl;
+      //     window.location.href = payUrl;
+      //   } else {
+      //     toast.error("Thanh toán thất bại. Vui lòng thử lại sau.");
+      //   }
+      // }
+      const orderId = response.order._id;
+      const totalPrice = response.order.total_price;
+
+      if (selectedPaymentMethod === "Bank Transfer") {
+        // Thanh toán MoMo
+        const momoResponse = await momoPayment(orderId, totalPrice);
+
+        if (momoResponse?.data?.resultCode === 0) {
+          const payUrl = momoResponse.data.payUrl;
+          window.location.href = payUrl;
+        } else {
+          toast.error("Thanh toán qua MoMo thất bại.");
+        }
+      } else if (selectedPaymentMethod === "VNPAY") {
+        // Thanh toán VNPAY
+        const vnpayResponse = await vnpayPayment(orderId, totalPrice);
+        console.log("VNPAY Response:", vnpayResponse.data);
+        if (vnpayResponse?.success === true) {
+          const payUrl = vnpayResponse.data;
+          window.location.href = payUrl;
+        } else {
+          toast.error("Thanh toán qua VNPAY thất bại.");
+        }
+      } else {
+        // Thanh toán COD hoặc phương thức khác
+        toast.success("Đặt hàng thành công!");
         setTimeout(() => {
           navigate("/order", { state: { orderId: response._id } });
-        }, 5000); // Đợi 10 giây (10000 milliseconds)
-      } else if (selectedPaymentMethod === "Bank Transfer") {
-        const momoResponse = await momoPayment(
-          response.order._id,
-          response.order.total_price
-        );
-        // console.log("Momo response", momoResponse.data.payUrl);
-        if (momoResponse.data.resultCode === 0) {
-          const payUrl = momoResponse.data.payUrl;
-          // console.log("Pay url", payUrl);
-          window.location.href = payUrl;
-        }
+        }, 5000);
       }
     } catch (error) {
       console.error("Error creating order:", error);
@@ -496,6 +523,28 @@ const CheckoutPage = () => {
                     <div class="ml-5">
                       <span class="mt-2 font-semibold">
                         Thanh toán bằng Momo
+                      </span>
+                    </div>
+                  </label>
+                </div>
+                <div class="relative">
+                  <input
+                    className="peer hidden"
+                    id="radio_3"
+                    type="radio"
+                    name="paymentMethod"
+                    value="VNPAY"
+                    checked={selectedPaymentMethod === "VNPAY"}
+                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                  />
+                  <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                  <label
+                    class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                    for="radio_3"
+                  >
+                    <div class="ml-5">
+                      <span class="mt-2 font-semibold">
+                        Thanh toán bằng VNPay
                       </span>
                     </div>
                   </label>

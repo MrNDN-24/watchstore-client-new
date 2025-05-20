@@ -75,7 +75,7 @@ const OrderCard = (order) => {
         {/* Tính tổng tiền */}
         <div className="mt-4 text-right font-semibold text-lg">
           <span>Tổng tiền: </span>
-          <span>{order?.order.total_price} đ</span>
+          <span>{order?.order.total_price?.toLocaleString("vi-VN")}VND</span>
         </div>
 
         {/* Nút Hủy đơn hàng */}
