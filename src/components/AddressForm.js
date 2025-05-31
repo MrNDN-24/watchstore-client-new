@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserData } from "../services/userService";
 import { toast, ToastContainer } from "react-toastify";
-
+import SidebarMenu from "./SidebarMenu";
 import { updateAddress } from "../services/addressService";
 
 const AddressForm = () => {
@@ -10,24 +10,19 @@ const AddressForm = () => {
   const [isChange, setIsChange] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const getUserData = async () => {
-      // console.log("Ham lay user profile");
       const userData = await fetchUserData();
-
       if (userData) {
-        console.log("Address", userData);
         setUserAddress(userData.address_id);
       } else {
-        navigate("/login"); // Chuyển đến trang đăng nhập nếu không có token hợp lệ
+        navigate("/login");
       }
     };
     getUserData();
   }, [navigate, isChange]);
-  // console.log("Day la logged user", loggedInUser);
-
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,51 +31,36 @@ const AddressForm = () => {
       [name]: value,
     }));
   };
-  const handleEditProfile = () => {
-    setIsEditing(true);
-  };
+
+  const handleEditProfile = () => setIsEditing(true);
 
   const handleSave = async () => {
-    // const updatedUserAddress = loggedInUser.address_id;
     const address = await updateAddress(userAddress);
-    console.log("update data", address);
     toast.success("Cập nhật thông tin thành công");
     setIsEditing(false);
-
-    // console.log("user", user);
     setIsChange(!isChange);
-    // Ở đây bạn có thể thêm logic để lưu thông tin vào backend
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Nếu có lỗi, dừng lại không gửi yêu cầu
-
-    // Nếu không có lỗi, gọi hàm lưu thông tin
     await handleSave();
   };
 
-  const handleCancel = async (event) => {
-    setIsEditing(false);
-  };
-  const sidebarItems = [
-    { label: "Thông tin cá nhân", href: "/api/profile" },
-    { label: "Địa chỉ", href: "/address", active: true },
-    { label: "Order", href: "/order" },
-  ];
+  const handleCancel = () => setIsEditing(false);
 
   const renderField = (label, name, value, type = "text") => {
     if (isEditing) {
       return (
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">{label}:</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {label}:
+          </label>
           {type === "textarea" ? (
             <textarea
               name={name}
               value={value}
               onChange={handleChange}
-              className="w-full min-h-[100px] p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full min-h-[100px] p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
             />
           ) : (
             <input
@@ -88,7 +68,7 @@ const AddressForm = () => {
               name={name}
               value={value}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
             />
           )}
         </div>
@@ -96,49 +76,26 @@ const AddressForm = () => {
     }
     return (
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-gray-700">{label}:</span>
-        <span className="text-gray-600">{value}</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {label}:
+        </span>
+        <span className="text-gray-600 dark:text-gray-200">{value}</span>
       </div>
     );
   };
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="flex flex-col h-full bg-white">
-        <div className="p-4">
-          <h2 className="text-xl font-bold text-gray-800">Quản lý tài khoản</h2>
-        </div>
-        <nav className="flex-1 h-full bg-white">
-          <ul className="space-y-2 px-3">
-            {sidebarItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                    item.active
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <div className="w-5 h-5 mr-3" />
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
 
-      <div className="mt-20 w-full max-w-4xl mx-auto p-4 mt-100 ">
+  return (
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <SidebarMenu />
+
+      <div className="mt-20 w-full max-w-4xl mx-auto p-4">
         <ToastContainer />
         {userAddress || isEditing ? (
-          /* Profile Info */
-          <div className="mt-[-64px] mx-4 relative bg-white rounded-lg shadow-lg">
-            <h1 className="text-xl font-semibold text-center text-black py-4">
+          <div className="mt-[-64px] mx-4 relative bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg">
+            <h1 className="text-xl font-semibold text-center py-4">
               Quản lý địa chỉ
             </h1>
             <div className="p-6">
-              {/* Bio */}
               <div className="mt-6">
                 {renderField(
                   "Địa chỉ",
@@ -155,17 +112,16 @@ const AddressForm = () => {
               <div className="mt-6">
                 {renderField("Tỉnh/Thành phố", "city", userAddress?.city)}
               </div>
-              {/* Action Buttons */}
-              <div className="flex gap-2">
+
+              <div className="flex gap-2 mt-4">
                 {isEditing ? (
                   <>
                     <button
                       onClick={handleCancel}
-                      className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-600"
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 text-black dark:text-white"
                     >
                       Hủy
                     </button>
-
                     <button
                       onClick={handleSubmit}
                       className={`px-4 py-2 text-white rounded-lg ${
@@ -181,7 +137,7 @@ const AddressForm = () => {
                 ) : (
                   <button
                     onClick={handleEditProfile}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
                   >
                     Chỉnh sửa Địa chỉ
                   </button>
@@ -190,16 +146,15 @@ const AddressForm = () => {
             </div>
           </div>
         ) : (
-          /* Message when no address exists */
-          <div className="mt-[-64px] mx-4 relative bg-white rounded-lg shadow-lg p-6 text-center">
-            <h1 className="text-xl font-semibold text-black">
+          <div className="mt-[-64px] mx-4 relative bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 text-center">
+            <h1 className="text-xl font-semibold">
               Bạn chưa có địa chỉ mặc định
             </h1>
-            <p className="text-gray-500 mt-4">
+            <p className="text-gray-500 dark:text-gray-300 mt-4">
               Vui lòng thêm địa chỉ để quản lý thông tin của bạn.
             </p>
             <button
-              onClick={handleEditProfile} // Gọi một hàm thêm địa chỉ nếu có
+              onClick={handleEditProfile}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
               Thêm địa chỉ

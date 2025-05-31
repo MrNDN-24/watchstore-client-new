@@ -1,17 +1,16 @@
 import { React, useEffect, useState } from "react";
 import ProductOrder from "./ProductOrder";
-import { getOrder, cancelOrder } from "../services/orderService"; // Import hàm cancelOrder
+import { getOrder, cancelOrder } from "../services/orderService";
 import { toast, ToastContainer } from "react-toastify";
 
 const OrderCard = (order) => {
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [isCancelling, setCancelling] = useState(false); // State để quản lý trạng thái hủy đơn hàng
+  const [isCancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        console.log("Order delivery", order);
         const ProductList = Array.isArray(order.order.products)
           ? order.order.products
           : [order.order.products];
@@ -26,14 +25,13 @@ const OrderCard = (order) => {
   }, [order.order.products]);
 
   const handleCancelOrder = async () => {
-    if (isCancelling) return; // Ngăn chặn khi đang xử lý hủy
+    if (isCancelling) return;
     setCancelling(true);
 
     try {
-      await cancelOrder(order.order._id); // Gọi API để hủy đơn hàng
+      await cancelOrder(order.order._id);
       toast.error("Đơn hàng đã được hủy thành công!");
-      // Cập nhật trạng thái sau khi hủy
-      window.location.reload(); // Tải lại trang hoặc cập nhật danh sách đơn hàng
+      window.location.reload();
     } catch (error) {
       console.error("Error cancelling order:", error);
       toast.error("Không thể hủy đơn hàng. Vui lòng thử lại sau.");
@@ -47,7 +45,7 @@ const OrderCard = (order) => {
       <ToastContainer />
       <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
         <div className="flex justify-between items-center mb-4">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-300">
             Ngày đặt hàng:{" "}
             {new Date(order.order.createdAt).toLocaleDateString("vi-VN", {
               day: "2-digit",
@@ -55,7 +53,7 @@ const OrderCard = (order) => {
               year: "numeric",
             })}
           </div>
-          <div className="text-sm text-gray-600 font-medium">
+          <div className="text-sm text-gray-600 dark:text-gray-200 font-medium">
             Mã đơn hàng: {order.order._id}
           </div>
         </div>
@@ -72,21 +70,19 @@ const OrderCard = (order) => {
           </div>
         ))}
 
-        {/* Tính tổng tiền */}
-        <div className="mt-4 text-right font-semibold text-lg">
+        <div className="mt-4 text-right font-semibold text-lg text-gray-800 dark:text-gray-100">
           <span>Tổng tiền: </span>
-          <span>{order?.order.total_price} đ</span>
+          <span>{order?.order.total_price?.toLocaleString("vi-VN")} VND</span>
         </div>
 
-        {/* Nút Hủy đơn hàng */}
         {order.order.deliveryStatus === "Chờ xử lý" && (
           <div className="mt-4 text-right">
             <button
               onClick={handleCancelOrder}
               className={`px-4 py-2 rounded-lg text-white ${
                 isCancelling
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700"
+                  ? "bg-gray-500 dark:bg-gray-600 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
               }`}
               disabled={isCancelling}
             >

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
-
 import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import banner1 from "../assets/banner1.png";
@@ -11,7 +11,9 @@ import panel1 from "../assets/panel1.jpg";
 import ProductList from "../components/ProductList";
 import Brands from "../components/Brands";
 import StoreDetail from "../components/StoreDetail";
-import ChatBot from "../components/ChatBot"
+import ChatBot from "../components/ChatBot";
+import ProductAdPanel from "../components/ProductAdPanel";
+
 const HomePage = () => {
   const navigate = useNavigate();
 
@@ -24,56 +26,70 @@ const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const prevSlide = () => {
-    const isFirstSlide = currentIndex == 0;
+    const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
+
   const nextSlide = () => {
-    const isLastSlide = currentIndex == slides.length - 1;
+    const isLastSlide = currentIndex === slides.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
 
   return (
-    <div>
-      <Navbar /> {/* Thêm Navbar */}
-      <main>
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-500">
+      <Navbar />
+      <main className="px-4 sm:px-8 md:px-12">
+        {/* Banner slider */}
         <div className="flex flex-col h-[600px]">
           <div className="relative w-full h-[600px] overflow-hidden">
             {slides.map((slide, index) => (
               <img
                 src={slide}
-                alt=""
+                alt={`banner-${index + 1}`}
                 key={index}
                 className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
                   index === currentIndex ? "opacity-100" : "opacity-0"
                 }`}
               />
             ))}
-            <div className="absolute group-hover:block absolute top-[50%] -translate-x-0 translate-y-[50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+            <div className="absolute top-[50%] left-5 -translate-y-1/2 text-2xl rounded-full p-2 bg-black/30 text-white cursor-pointer">
               <MdArrowBackIos onClick={prevSlide} size={30} />
             </div>
-            <div className="absolute group-hover:block absolute top-[50%] -translate-x-0 translate-y-[50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+            <div className="absolute top-[50%] right-5 -translate-y-1/2 text-2xl rounded-full p-2 bg-black/30 text-white cursor-pointer">
               <MdArrowForwardIos onClick={nextSlide} size={30} />
             </div>
           </div>
         </div>
+
+        {/* Brands */}
         <Brands />
-        <div>
-          <img src={panel1} className="w-[100%]" />
+        <ProductAdPanel />
+
+        {/* Panel image */}
+        <div className="my-6">
+          <img src={panel1} className="w-full" alt="Panel Promotion" />
         </div>
-        <p className="text-heading1-bold text-3xl font-extrabold">
+
+        {/* Best selling */}
+        <p className="text-3xl font-extrabold my-6 text-black dark:text-white">
           Đồng hồ bán chạy
         </p>
         <ProductList limit={5} />
+
+        {/* Store info */}
+        <StoreDetail />
+
+        {/* Latest products */}
+        <p className="text-3xl font-extrabold my-6 text-black dark:text-white">
+          Sản phẩm mới nhất
+        </p>
+        <ProductList limit={5} filter={{ sortBy: "createdAt" }} />
       </main>
-      <StoreDetail />
-      <p className="text-heading1-bold text-3xl font-extrabold">
-        Sản phẩm mới nhất
-      </p>
-      <ProductList limit={5} filter={{ sortBy: "createdAt" }} />
-      <ChatBot/>
-      <Footer /> {/* Thêm Footer */}
+
+      <ChatBot />
+      <Footer />
     </div>
   );
 };

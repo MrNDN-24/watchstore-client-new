@@ -71,13 +71,16 @@ const ProductDetail = () => {
   return (
     <div>
       <ToastContainer />
-      <div className="container mx-auto mt-8 p-4 max-w-full w-[1200px]">
+      <div className="container mx-auto mt-8 p-4 max-w-full w-[1200px] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         {isLoading ? (
           <div>Loading...</div>
         ) : (
           <div>
-            <div className="flex items-center text-gray-500 text-sm mb-4">
-              <Link to="/homepage" className="hover:text-gray-700">
+            <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-4">
+              <Link
+                to="/homepage"
+                className="hover:text-gray-700 dark:hover:text-gray-300"
+              >
                 Trang chủ
               </Link>
               <span className="mx-2">&gt;</span>
@@ -87,11 +90,11 @@ const ProductDetail = () => {
               <div className="md:col-span-1">
                 <div className="md:flex-1 px-4">
                   {/* Main Square Image Display */}
-                  <div className="aspect-square rounded-lg bg-gray-100 mb-4">
+                  <div className="aspect-square rounded-lg bg-gray-100 dark:bg-gray-800 mb-4">
                     {images.map((image, index) => (
                       <div
                         key={index}
-                        className={`w-full aspect-square rounded-lg bg-gray-100 mb-4 flex items-center justify-center ${
+                        className={`w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-800 mb-4 flex items-center justify-center ${
                           selectedImage === index ? "block" : "hidden"
                         }`}
                       >
@@ -105,14 +108,12 @@ const ProductDetail = () => {
                   </div>
 
                   {/* Square Thumbnails */}
-                  <div className="flex -mx-2 mb-4 overflow-x-auto ">
+                  <div className="flex -mx-2 mb-4 overflow-x-auto">
                     {images.map((image, index) => (
                       <div key={index} className="flex-shrink-0 w-24 px-2">
-                        {" "}
-                        {/* Điều chỉnh kích thước cố định */}
                         <button
                           onClick={() => setSelectedImage(index)}
-                          className={`focus:outline-none w-full aspect-square rounded-lg bg-gray-100 flex items-center justify-center ${
+                          className={`focus:outline-none w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center ${
                             selectedImage === index
                               ? "ring-2 ring-indigo-300 ring-inset"
                               : ""
@@ -133,118 +134,78 @@ const ProductDetail = () => {
                 <h1 className="text-2xl font-semibold text-center">
                   {product.product.name}
                 </h1>
-                <p className="text-gray-700 mt-2">
+                <p className="text-gray-700 dark:text-gray-300 mt-2">
                   {product.product.description}
                 </p>
                 <div className="mb-4">
                   {product?.product.discount_price > 0 ? (
                     <div>
                       <span className="text-2xl text-red-500 font-bold mr-2">
-                        {" "}
                         {product?.product.discount_price.toLocaleString(
                           "vi-VN"
                         )}
                         đ
                       </span>
-                      <span className="text-gray-500 line-through">
+                      <span className="text-gray-500 dark:text-gray-400 line-through">
                         {product?.product.price.toLocaleString("vi-VN")}đ
                       </span>
                     </div>
                   ) : (
-                    <span className="text-2xl  font-bold mr-2">
-                      {" "}
+                    <span className="text-2xl font-bold mr-2">
                       {product?.product.price.toLocaleString("vi-VN")}đ
                     </span>
                   )}
-                  {/* <span className="text-2xl font-bold mr-2">$349.99</span>
-                <span className="text-gray-500 line-through">$399.99</span> */}
                 </div>
                 <Star stars={product?.product.product_rating} />
                 <div className="mt-4 mb-4 flex-col">
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Thương hiệu:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product?.product.brand_id.name}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Giới tính:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.gender}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Kiểu dây đeo :
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.strapType}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Mặt đồng hồ:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.dialShape}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Chất liệu kính:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.glassType}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Loại mặt số:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.dialPattern}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Màu sắc:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.dialColor}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Độ chống nước:
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.waterResistance}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 pb-1">
-                    <span className="text-lg font-semibold text-primary">
-                      Xuất xứ:{" "}
-                    </span>
-                    <span className="text-primary text-gray-700">
-                      {product.product.origin}
-                    </span>
-                  </div>
+                  {[
+                    {
+                      label: "Thương hiệu",
+                      value: product?.product.brand_id.name,
+                    },
+                    { label: "Giới tính", value: product.product.gender },
+                    { label: "Kiểu dây đeo", value: product.product.strapType },
+                    { label: "Mặt đồng hồ", value: product.product.dialShape },
+                    {
+                      label: "Chất liệu kính",
+                      value: product.product.glassType,
+                    },
+                    {
+                      label: "Loại mặt số",
+                      value: product.product.dialPattern,
+                    },
+                    { label: "Màu sắc", value: product.product.dialColor },
+                    {
+                      label: "Độ chống nước",
+                      value: product.product.waterResistance,
+                    },
+                    { label: "Xuất xứ", value: product.product.origin },
+                  ].map(({ label, value }, idx) => (
+                    <div
+                      key={idx}
+                      className="flex justify-between items-left mt-4 mb-4 border-b border-gray-300 dark:border-gray-700 pb-1"
+                    >
+                      <span className="text-lg font-semibold text-primary dark:text-indigo-400">
+                        {label}:
+                      </span>
+                      <span className="text-primary text-gray-700 dark:text-gray-300">
+                        {value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-                {/* <p className="text-gray-700 mt-2">
-              In Stock: {product.product.stock}
-            </p> */}
                 <div className="mt-4">
-                  <label htmlFor="quantity" className="text-gray-700">
+                  <label
+                    htmlFor="quantity"
+                    className="text-gray-700 dark:text-gray-300"
+                  >
                     Số lượng:
                   </label>
                   <select
                     id="quantity"
-                    className="bg-white border border-gray-300 p-2 rounded-md mt-2 ml-2"
+                    className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 p-2 rounded-md mt-2 ml-2 text-gray-900 dark:text-gray-100"
                     onChange={(e) => setQty(e.target.value)}
+                    value={qty}
                   >
                     {[...Array(product.product.stock).keys()].map((num) => (
                       <option key={num + 1} value={num + 1}>
@@ -262,7 +223,10 @@ const ProductDetail = () => {
                     Thêm vào giỏ hàng
                   </button>
                 ) : (
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-yellow-600 w-full">
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-yellow-600 w-full"
+                    disabled
+                  >
                     Hết hàng
                   </button>
                 )}
@@ -270,13 +234,13 @@ const ProductDetail = () => {
             </div>
           </div>
         )}
-        {/* <!-- Reviews --> */}
+        {/* Reviews */}
         <ProductReview product_id={id} />
-        {/* <ProductList
-          limit={5}
-          filter={{ brand_ids: [product?.product.brand_id] }}
-        /> */}
-        <h2 id="reviews-heading" className="py-10 font-extrabold">
+
+        <h2
+          id="reviews-heading"
+          className="py-10 font-extrabold dark:text-gray-100"
+        >
           Sản phẩm liên quan
         </h2>
         <ProductList limit={4} filter={filter} />

@@ -28,10 +28,10 @@ const VoucherPage = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-4xl font-extrabold text-center mb-6 text-gray-800 uppercase tracking-wider border-b-4 border-black pb-3">
+        <h2 className="text-4xl font-extrabold text-center mb-6 uppercase tracking-wider border-b-4 border-black dark:border-white pb-3 text-gray-800 dark:text-white">
           Voucher Đang Diễn Ra
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
@@ -48,7 +48,7 @@ const VoucherPage = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-4xl font-extrabold text-center mb-6 text-gray-800 uppercase tracking-wider border-b-4 border-black pb-3">
+        <h2 className="text-4xl font-extrabold text-center mb-6 uppercase tracking-wider border-b-4 border-black dark:border-white pb-3 text-gray-800 dark:text-white">
           Voucher Sắp Diễn Ra
         </h2>
         <div className="flex flex-wrap justify-center gap-6">

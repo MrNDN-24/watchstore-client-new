@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getBrands } from "../services/brandService";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Brands = () => {
@@ -9,7 +8,6 @@ const Brands = () => {
   const navigate = useNavigate();
 
   const handleBrandClick = (brandId) => {
-    // Điều hướng tới trang sản phẩm với filter brand_id
     navigate("/product", { state: { filters: { brand_ids: [brandId] } } });
   };
 
@@ -25,12 +23,15 @@ const Brands = () => {
       }
     };
     fetchBrands();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
-    <div className="flex flex-col items-center gap-10 py-8 px-5">
-      <p className="text-heading1-bold text-4xl font-extrabold ">Thương hiệu</p>
-      {!Brands || brands.length === 0 ? (
+    <div className="flex flex-col items-center gap-10 py-8 px-5 bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-500">
+      <p className="text-4xl font-extrabold dark:text-white">Thương hiệu</p>
+
+      {loading ? (
+        <p className="text-body-bold">Đang tải...</p>
+      ) : brands.length === 0 ? (
         <p className="text-body-bold">Không tìm thấy thương hiệu</p>
       ) : (
         <div className="flex flex-wrap items-center justify-center gap-8">
@@ -38,12 +39,12 @@ const Brands = () => {
             <div
               key={brand._id}
               onClick={() => handleBrandClick(brand._id)}
-              className="cursor-pointer"
+              className="cursor-pointer bg-white-100 dark:bg-white p-2 rounded-lg shadow hover:scale-105 transition-transform"
             >
               <img
                 src={brand.image_url}
                 alt={brand.name}
-                className="rounded-lg h-[60px] object-contain"
+                className="h-[60px] w-[120px] object-contain"
               />
             </div>
           ))}

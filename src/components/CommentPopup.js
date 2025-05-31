@@ -10,13 +10,12 @@ const Modal = ({ isOpen, onClose, children }) => {
         className="fixed inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
-      <div className="bg-white rounded-lg p-6 max-w-md w-full relative z-10">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full relative z-10 shadow-lg dark:shadow-black/50">
         {children}
       </div>
     </div>
   );
 };
-
 export default function CommentPopup({
   isOpen,
   onClose,
@@ -26,8 +25,6 @@ export default function CommentPopup({
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
 
   const handleStarClick = (value) => {
     setRating(value);
@@ -47,16 +44,20 @@ export default function CommentPopup({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="space-y-4">
+      <div className="space-y-4 dark:text-white">
         {/* Header */}
         <div>
-          <h2 className="text-xl font-semibold">Viết đánh giá</h2>
-          <p className="text-gray-500 text-sm">Đánh giá {productName}</p>
+          <h2 className="text-xl font-semibold dark:text-white">
+            Viết đánh giá
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
+            Đánh giá {productName}
+          </p>
         </div>
 
         {/* Rating */}
         <div>
-          <p className="text-sm mb-2">Đánh giá của bạn</p>
+          <p className="text-sm mb-2 dark:text-gray-300">Đánh giá của bạn</p>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((value) => (
               <button
@@ -65,12 +66,13 @@ export default function CommentPopup({
                 onClick={() => handleStarClick(value)}
                 onMouseEnter={() => handleStarHover(value)}
                 onMouseLeave={() => setHoveredRating(0)}
+                aria-label={`${value} star`}
               >
                 <Star
                   className={`w-8 h-8 ${
                     value <= (hoveredRating || rating)
                       ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                      : "text-gray-400 dark:text-gray-600"
                   }`}
                 />
               </button>
@@ -81,7 +83,11 @@ export default function CommentPopup({
         {/* Comment */}
         <div>
           <textarea
-            className="w-full p-2 border rounded-lg resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded-lg resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-500
+              border-gray-300 dark:border-gray-600
+              bg-white dark:bg-gray-900
+              text-gray-900 dark:text-white
+              placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Chia sẻ cảm nhận của bạn về sản phẩm"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -91,13 +97,13 @@ export default function CommentPopup({
         {/* Buttons */}
         <div className="flex gap-4 justify-end">
           <button
-            className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white"
             onClick={onClose}
           >
             Hủy
           </button>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             onClick={handleSubmit}
           >
             Xác nhận

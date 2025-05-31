@@ -134,7 +134,9 @@
   color: #ff0000;
 }
 
-.chat-body .bot-message svg {
+/* Cùng style cho cả bot và staff */
+.chat-body .bot-message svg,
+.chat-body .staff-message svg {
   height: 35px;
   width: 35px;
   padding: 6px;
@@ -142,18 +144,35 @@
   fill: #fff;
   align-self: flex-end;
   margin-bottom: 2px;
-  background: #2FDDA0;
   border-radius: 50%;
+}
+
+/* Chỉ khác màu background */
+.chat-body .bot-message svg {
+  background: #2FDDA0; /* Màu xanh lá cho bot */
+}
+
+.chat-body .staff-message svg {
+  background: #77c5d5; /* Màu xanh dương cho staff */
+}
+
+/* Tin nhắn bot và staff giống nhau */
+.bot-message,
+.staff-message {
+  align-self: flex-start;
+}
+
+.bot-message .message-text,
+.staff-message .message-text {
+  background: #E7FCF3;
+  border-radius: 0 16px 16px 16px;
+  color: #333;
 }
 
 .message {
   display: flex;
   gap: 12px;
   max-width: 85%;
-}
-
-.bot-message {
-  align-self: flex-start;
 }
 
 .user-message {
@@ -170,13 +189,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   text-align: left;
   font-family: system-ui, -apple-system, sans-serif;
-  
-}
-
-.bot-message .message-text {
-  background: #E7FCF3;
-  border-radius: 0 16px 16px 16px;
-  color: #333;
 }
 
 .user-message .message-text {

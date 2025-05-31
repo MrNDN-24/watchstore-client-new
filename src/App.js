@@ -4,6 +4,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
@@ -18,6 +19,8 @@ import AddressPage from "./pages/AddressPage";
 import ProductListingPage from "./pages/ProductListingPage";
 import OrderPage from "./pages/OrderPage";
 import VoucherPage from "./pages/VoucherPage";
+import BlogPage from "./pages/BlogPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
 import { ToastContainer } from "react-toastify";
 
 import ResetPassword from "./pages/ResetPassword";
@@ -27,6 +30,7 @@ function App() {
   return (
     <CartProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Navigate to="/homepage" />} />{" "}
           {/* Chuyển hướng đến "/homepage" */}
@@ -48,6 +52,8 @@ function App() {
             element={<ResetPassword />}
           />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blogs/:id" element={<BlogDetailPage />} />
         </Routes>
       </Router>
     </CartProvider>
