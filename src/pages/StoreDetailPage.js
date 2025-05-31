@@ -2,23 +2,26 @@ import React from "react";
 import Banner from "../assets/banner_storestr.jpg";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+
 const StoreDetailPage = () => {
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
       <Navbar />
-      <img src={Banner} />
+      <img src={Banner} className="w-full object-cover" alt="Banner" />
       <div className="container mx-auto p-6">
-        {/* begin introbox1 */}
+        {/* introbox1 */}
         <div className="introbox1 mgminu flex justify-center items-center">
           <div className="mt-12 max-w-[800px] mx-auto leading-relaxed">
             <div className="introbox1__des"></div>
             <div className="introbox1__tit text-center">
-              <h3 className="text-xl font-semibold">THÀNH LẬP NĂM 2020</h3>
-              <h2 className="text-2xl font-bold">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300">
+                THÀNH LẬP NĂM 2020
+              </h3>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 CAM KẾT 100% HÀNG CHÍNH HÃNG
               </h2>
             </div>
-            <div className="introbox1__content space-y-4 text-center md:text-left">
+            <div className="introbox1__content space-y-4 text-center md:text-left text-gray-700 dark:text-gray-300">
               <p>
                 Trải qua nhiều năm thành lập, với những nỗ lực không ngừng,
                 WatchThis đã gặt hái nhiều thành công trong hoạt động kinh doanh
@@ -31,7 +34,7 @@ const StoreDetailPage = () => {
                   href="http://online.gov.vn/Home/WebDetails/75019"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-blue-500 underline"
+                  className="text-blue-600 dark:text-blue-400 underline"
                 >
                   Xem giấy phép đăng ký TMĐT với Bộ Công Thương
                 </a>
@@ -63,17 +66,18 @@ const StoreDetailPage = () => {
             </div>
           </div>
         </div>
-        {/* end introbox1 */}
 
-        {/* begin introbox2 */}
+        {/* introbox2 */}
         <div className="introbox2 flex justify-center items-center mt-12">
           <div className="introbox1l max-w-[800px] mx-auto">
             <div className="introbox1__tit text-center">
-              <h2 className="text-2xl font-bold">NGÀNH NGHỀ KINH DOANH</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                NGÀNH NGHỀ KINH DOANH
+              </h2>
             </div>
-            <div className="introbox1__content text-center md:text-left">
+            <div className="introbox1__content text-center md:text-left text-gray-700 dark:text-gray-300 space-y-3 mt-4">
               <p>
-                • <strong>Bán lẻ đồng hồ</strong>:WatchThis trở thành thương
+                • <strong>Bán lẻ đồng hồ</strong>: WatchThis trở thành thương
                 hiệu đồng hồ uy tín phục vụ tận tâm, chuyên nghiệp, phân phối
                 đồng hồ chính hãng cho hàng nghìn khách hàng trên toàn quốc.
               </p>
@@ -98,7 +102,6 @@ const StoreDetailPage = () => {
             </div>
           </div>
         </div>
-        {/* end introbox2 */}
       </div>
       <Footer />
     </div>

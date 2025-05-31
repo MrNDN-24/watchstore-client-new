@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL_CLIENT;
 const API_URL = `${API_BASE_URL}/discount`;
 
@@ -38,6 +37,26 @@ export const getDiscounts = async () => {
     return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách mã giảm giá:", error);
+    return null;
+  }
+};
+
+export const getSuitableDiscount = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/product-ad/suitable-discount`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data; // giả sử trả về 1 discount object
+  } catch (error) {
+    console.error("Lỗi khi lấy mã giảm giá phù hợp:", error);
     return null;
   }
 };

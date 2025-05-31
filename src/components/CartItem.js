@@ -25,7 +25,6 @@ const CartItem = (product) => {
     handleUpdateCart();
     const fetchProductImages = async () => {
       try {
-        // console.log("product quantity:", product.quantity);
         const data = await getProductImages(product.product._id);
         setImages(data);
 
@@ -41,30 +40,20 @@ const CartItem = (product) => {
   }, [amount]);
 
   const handleIncrement = () => {
-    console.log("Số lượng tối đa:", product.product.stock);
-
     setQuantity((prev) => {
-      // Kiểm tra nếu số lượng hiện tại nhỏ hơn stock
       if (prev < product.product.stock) {
         const newQuantity = prev + 1;
-
-        // Cập nhật tổng số tiền
         setAmount(
           newQuantity *
             (product?.product.discount_price > 0
               ? product.product.discount_price
               : product.product.price)
         );
-
-        // Gọi callback để kích hoạt reload nếu có
         if (product.onReload) {
           product.onReload();
         }
-
         return newQuantity;
       }
-
-      // Nếu đạt giới hạn stock, giữ nguyên số lượng hiện tại
       toast.error("Đã đạt số lượng giới hạn");
       return prev;
     });
@@ -79,12 +68,10 @@ const CartItem = (product) => {
             ? product.product.discount_price
             : product.product.price)
       );
-      updateCartAmount(product.product._id, amount); // Cập nhật amount vào context
-
+      updateCartAmount(product.product._id, amount);
       if (product.onReload) {
-        product.onReload(); // Gọi callback để kích hoạt reload
+        product.onReload();
       }
-
       return newQuantity;
     });
   };
@@ -92,15 +79,10 @@ const CartItem = (product) => {
   const handleUpdateCart = async () => {
     try {
       setLoading(true);
-
       const result = await updateCart(product.product._id, quantity);
       if (product.onReload) {
-        product.onReload(); // Gọi callback để kích hoạt reload
-        // console.log("On reload");
+        product.onReload();
       }
-      // toast.success("Thêm vào giỏ hàng thành công!");
-      // Có thể dispatch action để update global state nếu bạn dùng Redux
-      // dispatch(updateCartSuccess(result.data));
     } catch (error) {
       console.error(error.message || "Có lỗi xảy ra!");
     } finally {
@@ -111,44 +93,44 @@ const CartItem = (product) => {
   const handleRemoveProduct = async (product_id) => {
     try {
       const result = await deleteProductFromCart(product_id);
-      // console.log("Product delete:", product_id);
-      console.log("Delete result", result);
       if (result.success) {
         toast.success("Xoá sản phẩm thành công");
       } else {
         toast.error("Lỗi khi xóa sản phẩm");
       }
-
-      // if (product.onReload) {
-      //   product.onReload(); // Gọi callback để kích hoạt reload
-      //   console.log("On reload");
-      // }
       setTimeout(() => {
         window.location.reload();
-      }, 2000); // 2000ms = 2 giây
+      }, 2000);
     } catch (error) {
       console.error(error.message || "Có lỗi xảy ra!");
     }
   };
 
+  // Khi 1 trong 3 điều kiện đúng => disable toàn bộ thẻ (trừ nút Remove)
   const isDisabled =
     product?.product.isDelete ||
     !product?.product.isActive ||
     product?.product.stock === 0;
 
   return (
-    <div className="flex flex-item w-full">
+    <div className="flex flex-item w-full relative">
       <ToastContainer />
-      <div className="w-full space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 border-b border-gray-30 md:mb-4">
-        <a className="shrink-0 md:order-1 relative">
-          {/* Nếu sản phẩm hết hàng, hiển thị nhãn hết hàng */}
-          {product.product.stock === 0 && (
-            <span className="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-semibold rounded-br-lg">
-              Hết hàng
-            </span>
-          )}
+
+      {/* Thẻ Hết hàng nằm bên ngoài div bị disable */}
+      {product.product.stock === 0 && (
+        <span className="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-semibold rounded-br-lg z-20">
+          Hết hàng
+        </span>
+      )}
+
+      <div
+        className={`w-full space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 border-b border-gray-300 dark:border-gray-700 md:mb-4 ${
+          isDisabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <a className="shrink-0 md:order-1 relative inline-block">
           <img
-            className="h-20 w-20 dark:hidden mt-4"
+            className="h-20 w-20 mt-4 rounded-md object-cover dark:brightness-90"
             src={primaryImage?.image_url}
             alt="image"
           />
@@ -158,20 +140,21 @@ const CartItem = (product) => {
           <div className="flex items-center">
             <button
               onClick={handleDecrement}
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 text-black"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 text-black dark:text-white"
               disabled={isDisabled}
             >
               -
             </button>
             <input
               type="text"
-              className="w-12 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
+              className="w-12 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-0"
               value={quantity}
               readOnly
+              disabled={isDisabled}
             />
             <button
               onClick={handleIncrement}
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 text-black"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 text-black dark:text-white"
               disabled={isDisabled}
             >
               +
@@ -187,8 +170,10 @@ const CartItem = (product) => {
         <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
           <a
             href={`/product/${product?.product._id}`}
-            className={`text-base font-medium text-gray-900 hover:underline dark:text-white ${
-              isDisabled ? "pointer-events-none" : ""
+            className={`text-base font-medium hover:underline ${
+              isDisabled
+                ? "pointer-events-none text-gray-400 dark:text-gray-600"
+                : "text-gray-900 dark:text-white"
             }`}
           >
             {product?.product.name}
@@ -196,9 +181,10 @@ const CartItem = (product) => {
 
           <div className="flex items-center gap-4">
             <button
-              // type="button"
               className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500"
               onClick={() => handleRemoveProduct(product?.product._id)}
+              // Không disable nút Remove
+              disabled={false}
             >
               <svg
                 className="me-1.5 h-5 w-5"

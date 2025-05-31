@@ -1,38 +1,38 @@
 import React, { useEffect, useState, useRef } from "react";
 import userAvatarImg from "../assets/user_avatar.jpg";
 import { useNavigate } from "react-router-dom";
-import { fetchUserData } from "../services/userService";
+import {
+  fetchUserData,
+  updateUser,
+  uploadImage,
+} from "../services/userService";
 import { toast, ToastContainer } from "react-toastify";
-import { updateUser } from "../services/userService";
-
-import { uploadImage } from "../services/userService";
+import SidebarMenu from "../components/SidebarMenu";
 
 const UserProfile = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isChange, setIsChange] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [image, setImage] = useState();
+  const [url, setUrl] = useState("");
+  const hiddenFileInput = useRef(null);
 
   useEffect(() => {
     const getUserData = async () => {
-      // console.log("Ham lay user profile");
       const userData = await fetchUserData();
-
       if (userData) {
-        // console.log(userData);
         setLoggedInUser(userData);
       } else {
-        navigate("/login"); // Chuyển đến trang đăng nhập nếu không có token hợp lệ
+        navigate("/login");
       }
     };
     getUserData();
   }, [navigate, isChange]);
-  // console.log("Day la logged user", loggedInUser);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [password, setPassword] = useState(""); // Thêm state cho New Password
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [avatar, setAvatar] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,10 +41,11 @@ const UserProfile = () => {
       [name]: value,
     }));
   };
+
   const handleEditProfile = () => {
     setIsEditing(true);
-    setPassword(""); // Đặt giá trị mật khẩu mới là rỗng
-    setConfirmPassword(""); // Đặt giá trị xác nhận mật khẩu là rỗng
+    setPassword("");
+    setConfirmPassword("");
   };
 
   const handleSave = async () => {
@@ -54,32 +55,27 @@ const UserProfile = () => {
         return;
       }
     }
-    console.log("image url update", url);
 
     const updatedUserData = {
       ...loggedInUser,
       ...(password ? { password } : {}),
       ...(avatar ? { avatar } : {}),
     };
-    console.log("update data", updatedUserData);
+
     toast.success("Cập nhật thông tin thành công");
     setIsEditing(false);
     setPassword("");
     setConfirmPassword("");
-    console.log("update user infor:", updatedUserData);
-    const user = await updateUser({ updatedUserData });
-    // console.log("user", user);
+    await updateUser({ updatedUserData });
     setIsChange(!isChange);
     setImage();
-    // Ở đây bạn có thể thêm logic để lưu thông tin vào backend
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra định dạng email
     if (!/\S+@\S+\.\S+/.test(loggedInUser.email)) {
-      alert("Định dạng email không đúng. Vui lòng thử lại.");
+      alert("Định dạng email không đúng.");
       return;
     }
 
@@ -88,24 +84,15 @@ const UserProfile = () => {
       return;
     }
 
-    // Kiểm tra mật khẩu
     if (password !== "" && password.length < 6) {
       alert("Mật khẩu phải có ít nhất 6 ký tự");
       return;
     }
 
-    // Nếu có lỗi, dừng lại không gửi yêu cầu
-
-    // Nếu không có lỗi, gọi hàm lưu thông tin
     await handleSave();
   };
 
-  const [image, setImage] = useState();
-  const [url, setUrl] = useState("");
-
-  const hiddenFileInput = useRef(null);
-
-  const handleClick = (event) => {
+  const handleClick = () => {
     hiddenFileInput.current.click();
   };
 
@@ -127,9 +114,7 @@ const UserProfile = () => {
           (maxSize - img.width) / 2,
           (maxSize - img.height) / 2
         );
-        // console.log("File", img.src);
         setImage(file);
-        // console.log("Image", image);
         await handleImageUpload(file);
       };
     };
@@ -140,17 +125,17 @@ const UserProfile = () => {
     formData.append("image", file);
     setLoading(true);
     const res = await uploadImage(formData);
-    console.log("Res.avatar :", res.avatar);
     setAvatar(res.avatar);
     setLoading(false);
   };
 
-  const handleCancel = async (event) => {
+  const handleCancel = () => {
     setIsEditing(false);
-    setPassword(""); // Đặt giá trị mật khẩu mới là rỗng
-    setConfirmPassword(""); // Đặt giá trị xác nhận mật khẩu là rỗng
+    setPassword("");
+    setConfirmPassword("");
     setImage();
   };
+
   const sidebarItems = [
     { label: "Thông tin cá nhân", href: "/api/profile", active: true },
     { label: "Địa chỉ", href: "/address" },
@@ -161,21 +146,23 @@ const UserProfile = () => {
     if (isEditing) {
       return (
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">{label}:</label>
+          <label className="text-sm font-medium dark:text-gray-200 text-gray-700">
+            {label}:
+          </label>
           {type === "textarea" ? (
             <textarea
               name={name}
               value={value}
               onChange={handleChange}
-              className="w-full min-h-[100px] p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full min-h-[100px] p-2 border rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:ring-blue-500"
             />
           ) : (
             <input
-              type="text"
+              type={type}
               name={name}
               value={value}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:ring-blue-500"
             />
           )}
         </div>
@@ -183,77 +170,48 @@ const UserProfile = () => {
     }
     return (
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-gray-700">{label}:</span>
-        <span className="text-gray-600">{value}</span>
+        <span className="text-sm font-medium dark:text-gray-200 text-gray-700">
+          {label}:
+        </span>
+        <span className="dark:text-gray-300 text-gray-600">{value}</span>
       </div>
     );
   };
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="flex flex-col h-full bg-white">
-        <div className="p-4">
-          <h2 className="text-xl font-bold text-gray-800">Quản lý tài khoản</h2>
-        </div>
-        <nav className="flex-1 h-full bg-white">
-          <ul className="space-y-2 px-3">
-            {sidebarItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                    item.active
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <div className="w-5 h-5 mr-3" />
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
 
-      <div className="mt-20 w-full max-w-4xl mx-auto p-4 mt-100 ">
+  return (
+    <div className="flex min-h-screen dark:bg-gray-900 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+      <SidebarMenu />
+
+      <div className="w-full max-w-4xl mx-auto p-4">
         <ToastContainer />
         {loggedInUser && (
-          /* Profile Info */
-          <div className="mt-[-64px] mx-4 relative bg-white rounded-lg shadow-lg">
-            <h1 className="text-xl font-semibold text-center text-black py-4">
+          <div className="mx-4 relative dark:bg-gray-800 bg-white rounded-lg shadow-lg">
+            <h1 className="text-xl font-semibold text-center py-4 dark:text-white text-black">
               Thông tin người dùng
             </h1>
             <div className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
-                {/* Avatar */}
                 <div className="relative">
                   {isEditing ? (
                     <div onClick={handleClick} style={{ cursor: "pointer" }}>
-                      {image ? (
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt="upload image"
-                          className="w-32 h-32 rounded-full border-4 border-white"
-                        />
-                      ) : (
-                        <img
-                          src={loggedInUser.avatar || userAvatarImg}
-                          alt="upload image"
-                          className="w-32 h-32 rounded-full border-4 border-white"
-                        />
-                      )}
+                      <img
+                        src={
+                          image
+                            ? URL.createObjectURL(image)
+                            : loggedInUser.avatar || userAvatarImg
+                        }
+                        alt="avatar"
+                        className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-700"
+                      />
                     </div>
                   ) : (
                     <img
                       src={loggedInUser.avatar || userAvatarImg}
-                      alt="upload image"
-                      className="w-32 h-32 rounded-full border-4 border-white"
+                      alt="avatar"
+                      className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-700"
                     />
                   )}
-
                   <input
-                    id="w-32 h-32 rounded-full border-4 border-white"
                     type="file"
                     onChange={handleImageChange}
                     ref={hiddenFileInput}
@@ -261,7 +219,7 @@ const UserProfile = () => {
                   />
                 </div>
               </div>
-              {/* Bio */}
+
               <div className="mt-6">
                 {renderField("Họ tên", "name", loggedInUser.name)}
               </div>
@@ -271,10 +229,11 @@ const UserProfile = () => {
               <div className="mt-6">
                 {renderField("Số điện thoại", "phone", loggedInUser.phone)}
               </div>
+
               {isEditing && (
                 <>
                   <div className="flex flex-col gap-1 mt-6">
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium dark:text-gray-200 text-gray-700">
                       Mật khẩu mới:
                     </label>
                     <input
@@ -282,11 +241,11 @@ const UserProfile = () => {
                       name="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:ring-blue-500"
                     />
                   </div>
                   <div className="flex flex-col gap-1 mt-6">
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium dark:text-gray-200 text-gray-700">
                       Xác thực mật khẩu:
                     </label>
                     <input
@@ -294,30 +253,29 @@ const UserProfile = () => {
                       name="confirmPassword"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:ring-blue-500"
                     />
                   </div>
                 </>
               )}
-              {/* Action Buttons */}
-              <div className="flex gap-2">
+
+              <div className="flex gap-2 mt-6">
                 {isEditing ? (
                   <>
                     <button
                       onClick={handleCancel}
-                      className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-600"
+                      className="px-4 py-2 border border-gray-300 rounded-lg dark:border-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700"
                     >
                       Hủy
                     </button>
-
                     <button
                       onClick={handleSubmit}
+                      disabled={isLoading}
                       className={`px-4 py-2 text-white rounded-lg ${
                         isLoading
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-blue-500 hover:bg-blue-600"
                       }`}
-                      disabled={isLoading}
                     >
                       {isLoading ? "Loading..." : "Lưu"}
                     </button>
@@ -325,7 +283,7 @@ const UserProfile = () => {
                 ) : (
                   <button
                     onClick={handleEditProfile}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                   >
                     Chỉnh sửa Profile
                   </button>

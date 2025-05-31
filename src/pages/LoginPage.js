@@ -322,9 +322,9 @@ const LoginPage = () => {
                   )}
                 />
               </div>
-              <div className="facebook-login-container mt-4">
+              <div className="facebook-login-container">
                 <button
-                  className="facebook-login-button bg-blue-600 text-white px-4 py-2 rounded-md w-full"
+                  className="facebook-login-button"
                   onClick={handleFacebookLogin}
                 >
                   <i className="fab fa-facebook mr-2"></i> Đăng nhập với

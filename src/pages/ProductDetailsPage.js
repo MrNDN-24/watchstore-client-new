@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 
 const ProductDetailsPage = () => {
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-900 min-h-screen">
       <Navbar />
       <ProductDetail />
       {/* <ProductOverView /> */}

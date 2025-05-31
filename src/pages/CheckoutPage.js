@@ -184,7 +184,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div>
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <Navbar />
       <ToastContainer />
       {/* Main Content */}
@@ -192,11 +192,13 @@ const CheckoutPage = () => {
         <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
           {/* Left Section */}
           <div className="px-4 pt-8">
-            <p className="text-xl font-medium">Thông tin đơn hàng</p>
-            <p className="text-gray-400">
+            <p className="text-xl font-medium text-gray-900 dark:text-white">
+              Thông tin đơn hàng
+            </p>
+            <p className="text-gray-400 dark:text-gray-300">
               Kiểm tra thông tin đơn hàng và áp mã giảm giá
             </p>
-            <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+            <div className="mt-8 space-y-3 rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-700 px-2 py-4 sm:px-6">
               {/* Product Item */}
               {selectedProducts.map((product) => (
                 <CheckOutItem
@@ -205,10 +207,8 @@ const CheckoutPage = () => {
                   quantity={product.quantity}
                 />
               ))}
-
-              {/* More items... */}
             </div>
-            <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+            <div className="space-y-4 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 shadow-sm sm:p-6">
               <form className="space-y-4" onSubmit={handleApplyVoucher}>
                 <div>
                   <label
@@ -222,7 +222,7 @@ const CheckoutPage = () => {
                     id="voucher"
                     value={voucherCode}
                     onChange={(e) => setVoucherCode(e.target.value)}
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
+                    className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 p-2.5 text-sm text-gray-900 dark:text-white"
                     placeholder=""
                     required
                   />
@@ -236,38 +236,42 @@ const CheckoutPage = () => {
                 </button>
               </form>
             </div>
-            <div className="mt-6 border-t border-b py-2">
+            <div className="mt-6 border-t border-b border-gray-200 dark:border-gray-700 py-2">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   Tổng tiền hàng:
                 </p>
-                <p className="font-semibold text-gray-900">
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {totalAmount.toLocaleString("vi-VN")}đ
                 </p>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">Giảm giá:</p>
-                <p className="font-semibold text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  Giảm giá:
+                </p>
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {discountAmount.toLocaleString("vi-VN")}đ
                 </p>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   Phí vận chuyển
                 </p>
-                <p className="font-semibold text-gray-900">Miễn phí</p>
+                <p className="font-semibold text-gray-900 dark:text-white">
+                  Miễn phí
+                </p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
                 Tổng tiền thanh toán
               </p>
-              <p className="text-2xl font-semibold text-gray-900">
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                 {(totalAmount - discountAmount).toLocaleString("vi-VN")}đ
               </p>
             </div>
             <button
-              className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+              className="mt-4 mb-8 w-full rounded-md bg-gray-900 dark:bg-gray-700 px-6 py-3 font-medium text-white"
               onClick={handlePlaceOrder}
             >
               Thanh toán
@@ -275,17 +279,18 @@ const CheckoutPage = () => {
           </div>
 
           {/* Right Section */}
-          <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-            <p className="text-xl font-medium">Thông tin giao hàng</p>
-            <p className="text-gray-400">
+          <div className="mt-10 bg-gray-50 dark:bg-gray-800 px-4 pt-8 lg:mt-0">
+            <p className="text-xl font-medium text-gray-900 dark:text-white">
+              Thông tin giao hàng
+            </p>
+            <p className="text-gray-400 dark:text-gray-300">
               Hoàn thiện thông tin giao hàng của bạn.
             </p>
             <div>
-              {/* Trong phần Right Section */}
               <form>
                 <label
                   htmlFor="name"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Họ và tên
                 </label>
@@ -295,14 +300,14 @@ const CheckoutPage = () => {
                     id="name"
                     name="name"
                     value={user?.name}
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Họ và tên"
                   />
                 </div>
 
                 <label
                   htmlFor="phone"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Số điện thoại
                 </label>
@@ -312,13 +317,17 @@ const CheckoutPage = () => {
                     id="phone"
                     name="phone"
                     value={user?.phone}
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Số điện thoại"
                   />
                 </div>
 
-                <p className="text-xl font-medium">Địa chỉ giao hàng</p>
-                <p className="text-gray-400 mb-4">Chọn địa chỉ giao hàng</p>
+                <p className="text-xl font-medium text-gray-900 dark:text-white">
+                  Địa chỉ giao hàng
+                </p>
+                <p className="text-gray-400 dark:text-gray-300 mb-4">
+                  Chọn địa chỉ giao hàng
+                </p>
                 <div className="space-y-4">
                   <div className="relative">
                     <input
@@ -332,15 +341,15 @@ const CheckoutPage = () => {
                       disabled={!address}
                     />
                     <label
-                      className="peer-checked:border-2 peer-checked:border-blue-600 peer-checked:bg-blue-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                      className="peer-checked:border-2 peer-checked:border-blue-600 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 flex cursor-pointer select-none rounded-lg border border-gray-300 dark:border-gray-600 p-4"
                       htmlFor="default-address"
                     >
                       <div className="ml-5">
-                        <span className="mt-2 font-semibold">
+                        <span className="mt-2 font-semibold text-gray-900 dark:text-white">
                           Sử dụng địa chỉ mặc định
                         </span>
                         {addressSelectionMethod === "default" && (
-                          <div className="mt-2 text-sm text-gray-600">
+                          <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                             {address?.addressLine}, {address?.ward},{" "}
                             {address?.district}, {address?.city}
                           </div>
@@ -360,11 +369,11 @@ const CheckoutPage = () => {
                       onChange={() => handleAddressMethodChange("custom")}
                     />
                     <label
-                      className="peer-checked:border-2 peer-checked:border-blue-600 peer-checked:bg-blue-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                      className="peer-checked:border-2 peer-checked:border-blue-600 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 flex cursor-pointer select-none rounded-lg border border-gray-300 dark:border-gray-600 p-4"
                       htmlFor="custom-address"
                     >
                       <div className="ml-5">
-                        <span className="mt-2 font-semibold">
+                        <span className="mt-2 font-semibold text-gray-900 dark:text-white">
                           Nhập địa chỉ mới
                         </span>
                       </div>
@@ -374,7 +383,7 @@ const CheckoutPage = () => {
 
                 <label
                   htmlFor="address"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Địa chỉ
                 </label>
@@ -393,13 +402,13 @@ const CheckoutPage = () => {
                         ? handleCustomAddressChange
                         : undefined
                     }
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Địa chỉ"
                   />
                 </div>
                 <label
                   htmlFor="ward"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Phường
                 </label>
@@ -418,13 +427,13 @@ const CheckoutPage = () => {
                         ? handleCustomAddressChange
                         : undefined
                     }
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Phường"
                   />
                 </div>
                 <label
                   htmlFor="district"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Quận/huyện
                 </label>
@@ -443,13 +452,13 @@ const CheckoutPage = () => {
                         ? handleCustomAddressChange
                         : undefined
                     }
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Quận/huyện"
                   />
                 </div>
                 <label
                   htmlFor="city"
-                  className="mt-4 mb-2 block text-sm font-medium"
+                  className="mt-4 mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Tỉnh/thành phố
                 </label>
@@ -468,22 +477,17 @@ const CheckoutPage = () => {
                         ? handleCustomAddressChange
                         : undefined
                     }
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:text-white"
                     placeholder="Tỉnh/thành phố"
                   />
                 </div>
-
-                {/* <button
-                  type="submit"
-                  className="mt-4 w-full rounded-md bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700"
-                >
-                  Cập nhật địa chỉ
-                </button> */}
               </form>
               {/* Card Details and other input fields */}
-              <p class="mt-8 text-lg font-medium">Hình thức thanh toán</p>
-              <form class="mt-5 mb-10 grid gap-6">
-                <div class="relative">
+              <p className="mt-8 text-lg font-medium text-gray-900 dark:text-white">
+                Hình thức thanh toán
+              </p>
+              <form className="mt-5 mb-10 grid gap-6">
+                <div className="relative">
                   <input
                     className="peer hidden"
                     id="radio_1"
@@ -493,19 +497,19 @@ const CheckoutPage = () => {
                     checked={selectedPaymentMethod === "Cash on Delivery"}
                     onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                   />
-                  <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                  <span className="peer-checked:border-gray-700 dark:peer-checked:border-gray-300 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"></span>
                   <label
-                    class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                    for="radio_1"
+                    className="peer-checked:border-2 peer-checked:border-gray-700 dark:peer-checked:border-gray-300 peer-checked:bg-gray-50 dark:peer-checked:bg-gray-700 flex cursor-pointer select-none rounded-lg border border-gray-300 dark:border-gray-600 p-4"
+                    htmlFor="radio_1"
                   >
-                    <div class="ml-5">
-                      <span class="mt-2 font-semibold">
+                    <div className="ml-5">
+                      <span className="mt-2 font-semibold text-gray-900 dark:text-white">
                         Thanh toán khi nhận hàng
                       </span>
                     </div>
                   </label>
                 </div>
-                <div class="relative">
+                <div className="relative">
                   <input
                     className="peer hidden"
                     id="radio_2"
@@ -515,19 +519,19 @@ const CheckoutPage = () => {
                     checked={selectedPaymentMethod === "Bank Transfer"}
                     onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                   />
-                  <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                  <span className="peer-checked:border-gray-700 dark:peer-checked:border-gray-300 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"></span>
                   <label
-                    class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                    for="radio_2"
+                    className="peer-checked:border-2 peer-checked:border-gray-700 dark:peer-checked:border-gray-300 peer-checked:bg-gray-50 dark:peer-checked:bg-gray-700 flex cursor-pointer select-none rounded-lg border border-gray-300 dark:border-gray-600 p-4"
+                    htmlFor="radio_2"
                   >
-                    <div class="ml-5">
-                      <span class="mt-2 font-semibold">
+                    <div className="ml-5">
+                      <span className="mt-2 font-semibold text-gray-900 dark:text-white">
                         Thanh toán bằng Momo
                       </span>
                     </div>
                   </label>
                 </div>
-                <div class="relative">
+                <div className="relative">
                   <input
                     className="peer hidden"
                     id="radio_3"
@@ -537,20 +541,19 @@ const CheckoutPage = () => {
                     checked={selectedPaymentMethod === "VNPAY"}
                     onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                   />
-                  <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                  <span className="peer-checked:border-gray-700 dark:peer-checked:border-gray-300 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"></span>
                   <label
-                    class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                    for="radio_3"
+                    className="peer-checked:border-2 peer-checked:border-gray-700 dark:peer-checked:border-gray-300 peer-checked:bg-gray-50 dark:peer-checked:bg-gray-700 flex cursor-pointer select-none rounded-lg border border-gray-300 dark:border-gray-600 p-4"
+                    htmlFor="radio_3"
                   >
-                    <div class="ml-5">
-                      <span class="mt-2 font-semibold">
+                    <div className="ml-5">
+                      <span className="mt-2 font-semibold text-gray-900 dark:text-white">
                         Thanh toán bằng VNPay
                       </span>
                     </div>
                   </label>
                 </div>
               </form>
-              {/* <!-- Total --> */}
             </div>
           </div>
         </div>

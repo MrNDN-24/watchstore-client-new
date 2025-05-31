@@ -17,7 +17,7 @@ const VoucherCard = ({ discount }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCopyCode = (e) => {
-    e.stopPropagation(); // Ngăn sự kiện click vào card
+    e.stopPropagation();
     navigator.clipboard.writeText(discount.code);
     toast.success("Đã sao chép mã giảm giá!");
   };
@@ -33,7 +33,7 @@ const VoucherCard = ({ discount }) => {
     <>
       <div
         onClick={openModal}
-        className="cursor-pointer bg-white border-2 border-black text-black p-6 rounded-lg shadow-lg w-full max-w-sm hover:shadow-xl transition-shadow"
+        className="cursor-pointer bg-white dark:bg-gray-800 border-2 border-black dark:border-white text-black dark:text-white p-6 rounded-lg shadow-lg w-full max-w-sm hover:shadow-xl transition-shadow"
       >
         <img
           src={
@@ -45,33 +45,37 @@ const VoucherCard = ({ discount }) => {
           className="w-full h-40 object-cover rounded-md mb-4"
         />
 
-        <div className="text-3xl font-bold mb-2">
+        <div className="text-3xl font-bold mb-2 text-black dark:text-white">
           {discount.programName || "Mã giảm giá!"}
         </div>
-        <p className="text-base text-gray-800 mb-4">
+
+        <p className="text-base text-black dark:text-white mb-4">
           Giảm {discount.discountValue?.toLocaleString("vi-VN")} VND trên đơn
           hàng
         </p>
 
-        <div className="bg-gray-100 border border-black rounded-lg px-4 py-2 flex items-center justify-between">
-          <span className="text-xl font-semibold">{discount.code}</span>
+        <div className="bg-gray-100 dark:bg-gray-700 border border-black dark:border-white rounded-lg px-4 py-2 flex items-center justify-between">
+          <span className="text-xl font-semibold text-black dark:text-white">
+            {discount.code}
+          </span>
           <button
-            className="bg-black text-white px-3 py-1 rounded hover:bg-gray-800"
+            className="bg-black dark:bg-white dark:text-black text-white px-3 py-1 rounded hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors"
             onClick={handleCopyCode}
           >
             Sao chép
           </button>
         </div>
-        <div className="text-sm mt-4">
+
+        <div className="text-sm mt-4 text-black dark:text-white">
           <p>
             Ngày bắt đầu:{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-black dark:text-white">
               {formatExpirationDate(discount.startDate)}
             </span>
           </p>
           <p>
             Hạn sử dụng:{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-black dark:text-white">
               {formatExpirationDate(discount.expirationDate)}
             </span>
           </p>
@@ -83,19 +87,17 @@ const VoucherCard = ({ discount }) => {
         isOpen={isOpen}
         onRequestClose={closeModal}
         contentLabel="Chi tiết chương trình"
-        className="bg-white p-6 rounded-lg max-w-5xl mx-auto mt-20 shadow-xl border border-gray-300 outline-none max-h-screen overflow-y-auto relative text-left"
+        className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-5xl mx-auto mt-20 shadow-xl border border-gray-300 dark:border-gray-600 outline-none max-h-screen overflow-y-auto relative text-left text-black dark:text-white"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex"
       >
-        {/* Nút đóng dấu X góc trên bên phải */}
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 text-gray-600 hover:text-black text-2xl font-bold focus:outline-none"
+          className="absolute top-4 right-4 text-gray-600 dark:text-white hover:text-black dark:hover:text-white text-2xl font-bold focus:outline-none"
           aria-label="Đóng"
         >
           &times;
         </button>
 
-        {/* Hình ảnh voucher */}
         <img
           src={
             discount.programImage && discount.programImage.trim() !== ""
@@ -106,29 +108,34 @@ const VoucherCard = ({ discount }) => {
           className="w-full h-80 object-contain rounded-md mb-4"
         />
 
-        {/* Tên chương trình */}
-        <h2 className="text-2xl font-bold mb-4 text-center">
+        <h2 className="text-2xl font-bold mb-4 text-center text-black dark:text-white">
           {discount.programName}
         </h2>
 
-        {/* Nội dung căn trái */}
-        <div className="text-left">
-          <p className="mb-2">
-            <strong>Mã giảm giá:</strong> {discount.code}
+        <div className="text-left text-black dark:text-white">
+          <p className="mb-2 text-black dark:text-white">
+            <strong className="text-black dark:text-white">Mã giảm giá:</strong>{" "}
+            <span className="text-black dark:text-white">{discount.code}</span>
           </p>
-          <p className="mb-2">
-            <strong>Giá trị giảm giá:</strong>{" "}
-            {discount.discountValue?.toLocaleString("vi-VN")} VND
+          <p className="mb-2 text-black dark:text-white">
+            <strong className="text-black dark:text-white">
+              Giá trị giảm giá:
+            </strong>{" "}
+            <span className="text-black dark:text-white">
+              {discount.discountValue?.toLocaleString("vi-VN")} VND
+            </span>
           </p>
-          <p className="mb-2">
-            <strong>Thời gian:</strong>{" "}
-            {formatExpirationDate(discount.startDate)} -{" "}
-            {formatExpirationDate(discount.expirationDate)}
+          <p className="mb-2 text-black dark:text-white">
+            <strong className="text-black dark:text-white">Thời gian:</strong>{" "}
+            <span className="text-black dark:text-white">
+              {formatExpirationDate(discount.startDate)} -{" "}
+              {formatExpirationDate(discount.expirationDate)}
+            </span>
           </p>
-          <div className="mb-2">
-            <strong>Mô tả:</strong>
+          <div className="mb-2 text-black dark:text-white">
+            <strong className="text-black dark:text-white">Mô tả:</strong>
             <div
-              className="mt-1 text-gray-800"
+              className="mt-1 text-black dark:text-white"
               dangerouslySetInnerHTML={{ __html: discount.description }}
             />
           </div>

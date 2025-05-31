@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import { Menu } from "lucide-react";
-
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FilterPills from "../components/FilterPills";
@@ -22,6 +20,7 @@ const ProductListingPage = () => {
     const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
+
   const nextSlide = () => {
     const isLastSlide = currentIndex === slides.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
@@ -31,11 +30,10 @@ const ProductListingPage = () => {
   useEffect(() => {
     console.log("Selected Filters:", filters);
     filters = location.state || {};
-    // Tại đây bạn có thể sử dụng các filters này để lọc sản phẩm từ API hoặc dữ liệu local
   }, [filters]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <Navbar />
       <div>
         <div className="flex flex-col">
@@ -50,16 +48,24 @@ const ProductListingPage = () => {
                 }`}
               />
             ))}
-            <div className="absolute group-hover:block absolute top-[50%] -translate-x-0 translate-y-[50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+            <div className="absolute top-[50%] -translate-x-0 translate-y-[-50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
               <MdArrowBackIos onClick={prevSlide} size={30} />
             </div>
-            <div className="absolute group-hover:block absolute top-[50%] -translate-x-0 translate-y-[50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+            <div className="absolute top-[50%] -translate-x-0 translate-y-[-50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
               <MdArrowForwardIos onClick={nextSlide} size={30} />
             </div>
           </div>
         </div>
-        <FilterPills />
-        <ProductList filter={filters} limit={10} />
+
+        {/* Filter Pills */}
+        <div className="bg-white dark:bg-gray-800 py-4">
+          <FilterPills />
+        </div>
+
+        {/* Product List */}
+        <div className="px-4 sm:px-8 md:px-16">
+          <ProductList filter={filters} limit={10} />
+        </div>
       </div>
       <Footer />
     </div>
