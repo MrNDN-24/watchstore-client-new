@@ -21,6 +21,7 @@ import OrderPage from "./pages/OrderPage";
 import VoucherPage from "./pages/VoucherPage";
 import BlogPage from "./pages/BlogPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
+import FavouritePage from "./pages/FavouritePage";
 import { ToastContainer } from "react-toastify";
 
 import ResetPassword from "./pages/ResetPassword";
@@ -54,6 +55,7 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blogs/:id" element={<BlogDetailPage />} />
+          <Route path="/favourite" element={<FavouritePage />} />
         </Routes>
       </Router>
     </CartProvider>

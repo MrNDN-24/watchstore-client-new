@@ -230,7 +230,14 @@ const CheckoutPage = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800"
+                  className="flex w-full items-center justify-center rounded-lg 
+             bg-primary-700 px-5 py-2.5 text-sm font-medium text-white 
+             hover:bg-primary-800 disabled:opacity-60
+             dark:bg-primary-600 dark:hover:bg-primary-700
+             dark:text-white
+             bg-gray-700 text-white
+             hover:bg-gray-900
+             "
                 >
                   Sử dụng
                 </button>

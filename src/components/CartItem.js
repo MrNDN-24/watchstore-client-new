@@ -21,13 +21,11 @@ const CartItem = (product) => {
   const { updateCartAmount } = useCart();
 
   useEffect(() => {
-    updateCartAmount(product.product._id, amount); // Cập nhật amount vào context
-    handleUpdateCart();
+    updateCartAmount(product.product._id, amount); // Cập nhật tổng tiền vào context
     const fetchProductImages = async () => {
       try {
         const data = await getProductImages(product.product._id);
         setImages(data);
-
         const primary = data.find((image) => image.isPrimary === true);
         setPrimaryImage(primary);
       } catch (error) {
@@ -37,56 +35,45 @@ const CartItem = (product) => {
       }
     };
     fetchProductImages();
-  }, [amount]);
+  }, []);
+
+  useEffect(() => {
+    const updateQuantity = async () => {
+      try {
+        await updateCart(product.product._id, quantity);
+      } catch (error) {
+        console.error(error.message || "Có lỗi xảy ra!");
+      }
+    };
+    updateCartAmount(product.product._id, amount);
+    updateQuantity();
+  }, [quantity]);
 
   const handleIncrement = () => {
-    setQuantity((prev) => {
-      if (prev < product.product.stock) {
-        const newQuantity = prev + 1;
-        setAmount(
-          newQuantity *
-            (product?.product.discount_price > 0
-              ? product.product.discount_price
-              : product.product.price)
-        );
-        if (product.onReload) {
-          product.onReload();
-        }
-        return newQuantity;
-      }
-      toast.error("Đã đạt số lượng giới hạn");
-      return prev;
-    });
-  };
-
-  const handleDecrement = () => {
-    setQuantity((prev) => {
-      const newQuantity = prev > 1 ? prev - 1 : 1;
+    if (quantity < product.product.stock) {
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
       setAmount(
         newQuantity *
           (product?.product.discount_price > 0
             ? product.product.discount_price
             : product.product.price)
       );
-      updateCartAmount(product.product._id, amount);
-      if (product.onReload) {
-        product.onReload();
-      }
-      return newQuantity;
-    });
+    } else {
+      toast.error("Đã đạt số lượng giới hạn");
+    }
   };
 
-  const handleUpdateCart = async () => {
-    try {
-      setLoading(true);
-      const result = await updateCart(product.product._id, quantity);
-      if (product.onReload) {
-        product.onReload();
-      }
-    } catch (error) {
-      console.error(error.message || "Có lỗi xảy ra!");
-    } finally {
-      setLoading(false);
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      setAmount(
+        newQuantity *
+          (product?.product.discount_price > 0
+            ? product.product.discount_price
+            : product.product.price)
+      );
     }
   };
 
@@ -95,18 +82,15 @@ const CartItem = (product) => {
       const result = await deleteProductFromCart(product_id);
       if (result.success) {
         toast.success("Xoá sản phẩm thành công");
+        // Nếu muốn cập nhật lại danh sách cart ở CartPage thì nên dispatch fetchCart từ context hoặc redux
       } else {
         toast.error("Lỗi khi xóa sản phẩm");
       }
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     } catch (error) {
       console.error(error.message || "Có lỗi xảy ra!");
     }
   };
 
-  // Khi 1 trong 3 điều kiện đúng => disable toàn bộ thẻ (trừ nút Remove)
   const isDisabled =
     product?.product.isDelete ||
     !product?.product.isActive ||
@@ -115,8 +99,6 @@ const CartItem = (product) => {
   return (
     <div className="flex flex-item w-full relative">
       <ToastContainer />
-
-      {/* Thẻ Hết hàng nằm bên ngoài div bị disable */}
       {product.product.stock === 0 && (
         <span className="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-semibold rounded-br-lg z-20">
           Hết hàng
@@ -183,8 +165,6 @@ const CartItem = (product) => {
             <button
               className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500"
               onClick={() => handleRemoveProduct(product?.product._id)}
-              // Không disable nút Remove
-              disabled={false}
             >
               <svg
                 className="me-1.5 h-5 w-5"

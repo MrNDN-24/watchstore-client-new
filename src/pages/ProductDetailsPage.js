@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import ProductDetail from "../components/ProductDetail";
-import ProductOverView from "../components/ProductOverview";
 import Footer from "../components/Footer";
 
 const ProductDetailsPage = () => {
@@ -9,7 +8,6 @@ const ProductDetailsPage = () => {
     <div className="bg-white dark:bg-gray-900 min-h-screen">
       <Navbar />
       <ProductDetail />
-      {/* <ProductOverView /> */}
       <Footer />
     </div>
   );
