@@ -33,7 +33,12 @@ export const postComment = async (commentData) => {
         message: "Token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.",
       };
     }
-
+     if (error.response?.status === 400 && error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
     return {
       success: false,
       message: "Có lỗi xảy ra khi gửi bình luận. Vui lòng thử lại.",

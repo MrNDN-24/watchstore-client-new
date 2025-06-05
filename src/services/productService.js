@@ -4,13 +4,30 @@ import qs from "qs"; // Import thư viện qs
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL_CLIENT;
 const API_URL = `${API_BASE_URL}/product`;
 
+// export const getProductById = async (productId) => {
+//   const response = await axios.get(`${API_URL}/${productId}`, productId);
+//   const data = response.data;
+//   // console.log("Product Response", data);
+//   //   return Array.isArray(data.data) ? data.data : [];
+//   return data;
+// };
 export const getProductById = async (productId) => {
-  const response = await axios.get(`${API_URL}/${productId}`, productId);
-  const data = response.data;
-  // console.log("Product Response", data);
-  //   return Array.isArray(data.data) ? data.data : [];
-  return data;
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(`${API_URL}/${productId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy sản phẩm theo ID:", error.message || error);
+    return null;
+  }
 };
+
 
 export const getProductImages = async (productId) => {
   const response = await axios.get(`${API_URL}/images/${productId}`, productId);
@@ -32,6 +49,7 @@ export const getProductChatBot = async () => {
 
 export const getProducts = async (page_number, limit, filters) => {
   try {
+    const token = localStorage.getItem("token");
     // Tạo query string từ filters
     const queryParams = {
       page: page_number,
@@ -45,6 +63,10 @@ export const getProducts = async (page_number, limit, filters) => {
 
     const response = await fetch(`${API_URL}?${queryString}`, {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, 
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -67,7 +89,6 @@ export const getProducts = async (page_number, limit, filters) => {
     return null; // Trả về null nếu xảy ra lỗi
   }
 };
-
 
 export const getTopSellingProduct = async () => {
   try {

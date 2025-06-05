@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL_CLIENT;
 const API_URL = `${API_BASE_URL}/review`;
 
@@ -21,8 +20,7 @@ export const getProductReviews = async (page_number, limit, productId) => {
 
 export const addReview = async (order_id, rating, comment, product_id) => {
   const token = localStorage.getItem("token");
-  // console.log("Day la token", token);
-  if (!token) return null;
+  if (!token) return { success: false, message: "Bạn chưa đăng nhập." };
 
   try {
     const response = await axios.post(
@@ -39,10 +37,11 @@ export const addReview = async (order_id, rating, comment, product_id) => {
     );
 
     console.log("Review added successfully", response.data);
+    return { success: true, data: response.data.review };
   } catch (error) {
-    console.error(
-      "Error adding review",
-      error.response?.data?.message || error.message
-    );
+    const message = error.response?.data?.message || error.message;
+    console.error("Error adding review", message);
+    return { success: false, message };
   }
 };
+

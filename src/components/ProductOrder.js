@@ -48,6 +48,12 @@ const ProductOrder = ({
         data.comment,
         product._id
       );
+      if (!review.success) {
+        toast.error(
+          review.message || "Đã xảy ra lỗi khi gửi đánh giá. Vui lòng thử lại."
+        );
+        return;
+      }
       toast.success("Đánh giá đã được gửi thành công!");
       setTimeout(() => {
         window.location.reload();

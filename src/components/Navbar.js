@@ -10,7 +10,7 @@ import SearchItem from "./SearchItem";
 import NotificationBell from "./NotificationBell";
 import FavouriteIcon from "./FavouriteIcon";
 import { Moon, Sun } from "lucide-react"; // thêm icon chuyển theme
-
+import { logoutUser } from "../services/authService";
 const Navbar = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
@@ -32,9 +32,20 @@ const Navbar = () => {
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      if (token) {
+        await logoutUser(token);
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Bạn có thể hiển thị thông báo lỗi nếu cần
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
   };
 
   const navItems = [
