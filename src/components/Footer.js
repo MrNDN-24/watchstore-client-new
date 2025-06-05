@@ -6,21 +6,22 @@ import momo from "../assets/momo.png";
 
 const Footer = () => {
   const methods = [
-    { label: "Tiền mặt", icon: money }, // Thay icon bằng hình ảnh
+    { label: "Tiền mặt", icon: money },
     { label: "Chuyển khoản", icon: atm },
     { label: "Momo", icon: momo },
   ];
 
   return (
     <footer className="bg-gray-800 text-white">
-      <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="max-w-screen-xl px-4 py-8 sm:py-12 lg:py-16 mx-auto sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {/* Logo & Info */}
           <div className="flex flex-col items-center justify-center">
-            <img src={logo} className="mr-5 h-6 sm:h-9" alt="logo" />
-            <p className="max-w-xs mt-4 text-sm text-gray-400">
+            <img src={logo} className="h-8 sm:h-10 md:h-12 mb-2" alt="logo" />
+            <p className="max-w-xs mt-2 text-xs sm:text-sm text-gray-400 text-center">
               CÔNG TY CỔ PHẦN WATCHTHIS.
             </p>
-            <div className="flex mt-8 space-x-6 text-gray-400">
+            <div className="flex mt-6 space-x-4 text-gray-400">
               <a
                 className="hover:opacity-75"
                 href="#"
@@ -42,32 +43,35 @@ const Footer = () => {
                 </svg>
               </a>
             </div>
-            <div className="flex justify-center gap-4 bg-gray-800 p-4">
+            <div className="flex justify-center gap-2 sm:gap-4 bg-gray-800 p-2 sm:p-4">
               {methods.map((method, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center justify-center p-4 bg-transparent rounded-lg shadow hover:shadow-md transition-shadow"
+                  className="flex flex-col items-center justify-center p-2 sm:p-4 bg-transparent rounded-lg shadow hover:shadow-md transition-shadow"
                 >
-                  {/* Hiển thị ảnh thay vì biểu tượng */}
-                  <div className="mb-2">
+                  <div className="mb-1 sm:mb-2">
                     <img
                       src={method.icon}
-                      className="w-10 h-10 object-contain border border-gray-300 rounded-lg"
+                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain border border-gray-300 rounded-lg"
+                      alt={method.label}
                     />
                   </div>
-                  {/* <span className="text-sm font-semibold text-gray-400">
+                  <span className="text-xs sm:text-sm text-gray-400">
                     {method.label}
-                  </span> */}
+                  </span>
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-gray-400">© 2022 Company Name</p>
+            <p className="mt-2 sm:mt-4 text-xs text-gray-400 text-center">
+              © 2022 Company Name
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:col-span-2 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Navigation */}
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 md:col-span-1 lg:col-span-2 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="font-medium">WatchStore</p>
-              <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-400 bg-transparent shadow-none">
+              <nav className="flex flex-col mt-4 space-y-2 text-xs sm:text-sm text-gray-400 !bg-transparent !shadow-none">
                 <a className="hover:opacity-75" href="#">
                   Home
                 </a>
@@ -81,7 +85,7 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-medium">Chính sách</p>
-              <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-400 bg-transparent shadow-none">
+              <nav className="flex flex-col mt-4 space-y-2 text-xs sm:text-sm text-gray-400 !bg-transparent !shadow-none">
                 <a className="hover:opacity-75" href="#">
                   Bảo mật thông tin
                 </a>
@@ -98,7 +102,7 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-medium">Địa chỉ cửa hàng</p>
-              <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-400 bg-transparent shadow-none w-full">
+              <nav className="flex flex-col mt-4 space-y-2 text-xs sm:text-sm text-gray-400 !bg-transparent !shadow-none">
                 <a className="hover:opacity-75" href="#">
                   97 Trần Đại Nghĩa, HBT, Hà Nội
                 </a>
@@ -112,7 +116,7 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-medium">LIÊN HỆ HỖ TRỢ</p>
-              <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-400 bg-transparent shadow-none w-full">
+              <nav className="flex flex-col mt-4 space-y-2 text-xs sm:text-sm text-gray-400 !bg-transparent !shadow-none">
                 <a className="hover:opacity-75" href="#">
                   Hotline 1: 0352291310
                 </a>

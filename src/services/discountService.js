@@ -20,8 +20,8 @@ export const validateDiscountForUser = async (discountCode) => {
   }
 };
 
-export const getDiscounts = async () => {
-  const token = localStorage.getItem("token"); // ✅ Thêm token
+export const getDiscounts = async ({ type, page = 1, limit = 3 }) => {
+  const token = localStorage.getItem("token");
 
   if (!token) {
     console.error("Không tìm thấy token");
@@ -29,11 +29,14 @@ export const getDiscounts = async () => {
   }
 
   try {
-    const response = await axios.get(`${API_URL}`, {
+    const response = await axios.get(API_URL, {
+      params: { type, page, limit },
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    // Kết quả server trả về dạng { discounts, totalPages, currentPage }
     return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách mã giảm giá:", error);

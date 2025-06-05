@@ -87,7 +87,7 @@ const VoucherCard = ({ discount }) => {
         isOpen={isOpen}
         onRequestClose={closeModal}
         contentLabel="Chi tiết chương trình"
-        className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-5xl mx-auto mt-20 shadow-xl border border-gray-300 dark:border-gray-600 outline-none max-h-screen overflow-y-auto relative text-left text-black dark:text-white"
+        className="bg-white dark:bg-gray-800 p-6 rounded-lg mx-auto mt-20 shadow-xl border border-gray-300 dark:border-gray-600 outline-none max-h-[80vh] overflow-y-auto relative text-left text-black dark:text-white w-[45vw]"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex"
       >
         <button
@@ -112,30 +112,25 @@ const VoucherCard = ({ discount }) => {
           {discount.programName}
         </h2>
 
-        <div className="text-left text-black dark:text-white">
-          <p className="mb-2 text-black dark:text-white">
-            <strong className="text-black dark:text-white">Mã giảm giá:</strong>{" "}
-            <span className="text-black dark:text-white">{discount.code}</span>
+        <div className="text-black dark:text-white [&_p]:!text-left [&_p]:text-black dark:[&_p]:text-white">
+          <p className="mb-2">
+            <strong>Mã giảm giá:</strong> <span>{discount.code}</span>
           </p>
-          <p className="mb-2 text-black dark:text-white">
-            <strong className="text-black dark:text-white">
-              Giá trị giảm giá:
-            </strong>{" "}
-            <span className="text-black dark:text-white">
-              {discount.discountValue?.toLocaleString("vi-VN")} VND
-            </span>
+          <p className="mb-2">
+            <strong>Giá trị giảm giá:</strong>{" "}
+            <span>{discount.discountValue?.toLocaleString("vi-VN")} VND</span>
           </p>
-          <p className="mb-2 text-black dark:text-white">
-            <strong className="text-black dark:text-white">Thời gian:</strong>{" "}
-            <span className="text-black dark:text-white">
+          <p className="mb-2">
+            <strong>Thời gian:</strong>{" "}
+            <span>
               {formatExpirationDate(discount.startDate)} -{" "}
               {formatExpirationDate(discount.expirationDate)}
             </span>
           </p>
-          <div className="mb-2 text-black dark:text-white">
-            <strong className="text-black dark:text-white">Mô tả:</strong>
+          <div className="mb-2 [&_p]:!text-left [&_p]:text-black dark:[&_p]:text-white ">
+            <strong>Mô tả:</strong>
             <div
-              className="mt-1 text-black dark:text-white"
+              className="mt-1 [&_p]:!text-left [&_p]:text-black dark:[&_p]:text-white pl-4"
               dangerouslySetInnerHTML={{ __html: discount.description }}
             />
           </div>

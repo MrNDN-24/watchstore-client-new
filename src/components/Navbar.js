@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Navbar.css";
 import logo from "../assets/WatchThis_transparent-.png";
-import { MdShoppingCart, MdAccountCircle } from "react-icons/md";
+import { MdShoppingCart, MdAccountCircle, MdFavorite } from "react-icons/md";
 import { getProducts } from "../services/productService";
+import { getFavourites } from "../services/favouriteService";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import SearchItem from "./SearchItem";
 import NotificationBell from "./NotificationBell";
+import FavouriteIcon from "./FavouriteIcon";
 import { Moon, Sun } from "lucide-react"; // thêm icon chuyển theme
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
   const [showMenu, setShowMenu] = useState(false);
+
+  const [favouriteCount, setFavouriteCount] = useState(0);
 
   // Theme toggle
   useEffect(() => {
@@ -155,6 +159,8 @@ const Navbar = () => {
                 case 5:
                   navigate("/blog");
                   break;
+                default:
+                  break;
               }
             }}
           >
@@ -175,6 +181,9 @@ const Navbar = () => {
         {/* Notification */}
         <NotificationBell />
 
+        {/* Favourite icon */}
+        <FavouriteIcon />
+
         {/* Cart icon */}
         <div
           className="relative cursor-pointer"
@@ -182,7 +191,7 @@ const Navbar = () => {
         >
           <MdShoppingCart className="w-6 h-6 text-black dark:text-white" />
           {cartItems.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
               {cartItems.length}
             </span>
           )}

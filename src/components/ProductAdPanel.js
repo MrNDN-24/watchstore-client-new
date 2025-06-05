@@ -12,13 +12,13 @@ const ProductAdPanel = () => {
       const productData = await getTopSellingProduct();
       const discountData = await getSuitableDiscount();
 
-      if (!productData || !discountData) {
-        console.error("Không tìm thấy sản phẩm hoặc mã giảm giá phù hợp.");
+      if (!productData) {
+        console.error("Không tìm thấy sản phẩm.");
         return;
       }
 
       setProduct(productData.data);
-      setDiscount(discountData.data.discount || null);
+      setDiscount(discountData?.data?.discount || null);
     };
 
     fetchAdData();
@@ -26,11 +26,11 @@ const ProductAdPanel = () => {
 
   if (!product || !showModal) return null;
 
-  // Tính % giảm giá nếu có giá gốc và giảm giá
   const calculateDiscountPercent = () => {
-    if (!product?.price || !discount?.discountValue) return null;
+    if (!product?.price || !product?.discount_price) return null;
     const originalPrice = product.price;
-    const discountValue = discount.discountValue;
+    const discountPrice = product.discount_price;
+    const discountValue = originalPrice - discountPrice;
     return Math.round((discountValue / originalPrice) * 100);
   };
 
@@ -56,7 +56,7 @@ const ProductAdPanel = () => {
           className="cursor-pointer relative"
           onClick={() => window.open(`/product/${product._id}`, "_blank")}
         >
-          {/* Nhãn phần trăm giảm giá */}
+          {/* Hiển thị phần trăm giảm giá nếu có */}
           {discountPercent && (
             <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-md z-10">
               -{discountPercent}%
@@ -75,6 +75,7 @@ const ProductAdPanel = () => {
             </h2>
             <p className="text-sm text-gray-600">{product.description}</p>
 
+            {/* Chỉ hiển thị nếu có mã giảm giá */}
             {discount && (
               <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl px-5 py-4 shadow-lg space-y-2">
                 <div className="text-lg font-extrabold tracking-wide flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">

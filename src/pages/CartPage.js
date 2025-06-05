@@ -1,95 +1,62 @@
-import { React, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCart } from "../services/cartService";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCart } from "../redux/slices/cartSlice";
 import CartItem from "../components/CartItem";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-// import { useCart } from "../context/CartContext";
 
 const CartPage = () => {
-  const [cart, setCart] = useState();
-  const [isLoading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { items: products, status } = useSelector((state) => state.cart);
+
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedProductTotal, setSelectedProductTotal] = useState(0);
   const [savingValue, setSavingValue] = useState(0);
   const [originalTotal, setOriginalTotal] = useState(0);
 
-  const [reload, setReload] = useState(false);
-
-  // const { cartAmounts } = useCart();
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getCart();
-        console.log("Cart data", data);
-        const shouldNavigateToLogin =
-          !data.success &&
-          (!data.response ||
-            (data.response.status !== 404 &&
-              data.response.status !== undefined));
-
-        if (shouldNavigateToLogin) {
-          navigate("/login");
-        } else {
-          setCart(data);
-          const ProductList = Array.isArray(data.data.products)
-            ? data.data.products
-            : [data.data.products];
-          console.log("ProductList", ProductList);
-          setProducts(ProductList);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [reload]);
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   const handleCheckboxChange = (productId) => {
     setSelectedProducts((prevSelected) => {
       const updatedSelected = prevSelected.includes(productId)
         ? prevSelected.filter((id) => id !== productId)
         : [...prevSelected, productId];
+
       let discountPrice = 0;
       let originalPrice = 0;
-      // Tính toán tổng giá trị dựa trên giá trị mới
+
       const total = products
-        .filter((product) => updatedSelected.includes(product.product_id)) // Lọc sản phẩm được chọn
+        .filter((product) => updatedSelected.includes(product.product_id))
         .reduce((sum, product) => {
-          console.log("product:", product);
-          const productAmount = product.quantity || 0;
-          let productPrice = 0;
-          if (product.product_id.discount_price === 0) {
-            productPrice = product.product_id.price;
-          } // Lấy số lượng, mặc định là 1
-          else {
-            productPrice = product.product_id.discount_price;
-          }
-          discountPrice = sum + productAmount * productPrice;
-          originalPrice = sum + productAmount * product.product_id.price;
-          return discountPrice; // Tính giá trị
+          const qty = product.quantity || 0;
+          const discounted =
+            product.product_id.discount_price === 0
+              ? product.product_id.price
+              : product.product_id.discount_price;
+          discountPrice = sum + qty * discounted;
+          originalPrice = sum + qty * product.product_id.price;
+          return discountPrice;
         }, 0);
-      console.log("Selected products:", selectedProducts);
+
       setOriginalTotal(originalPrice);
       setSavingValue(originalPrice - discountPrice);
-      setSelectedProductTotal(total); // Cập nhật tổng giá trị ngay lập tức
-      console.log("Total", selectedProductTotal);
-      return updatedSelected; // Cập nhật selectedProducts
+      setSelectedProductTotal(total);
+
+      return updatedSelected;
     });
   };
 
   const handleProceedToCheckout = () => {
-    console.log("Proceed to checkout");
-    const selectedProductDetails = products.filter((product) =>
+    const selectedDetails = products.filter((product) =>
       selectedProducts.includes(product.product_id)
     );
     navigate("/checkout", {
-      state: { selectedProducts: selectedProductDetails },
+      state: { selectedProducts: selectedDetails },
     });
   };
 
@@ -106,7 +73,9 @@ const CartPage = () => {
             <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
               <div className="space-y-6">
                 <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-                  {products.length > 0 ? (
+                  {status === "loading" ? (
+                    <p>Đang tải...</p>
+                  ) : products.length > 0 ? (
                     products.map((product) => {
                       const isDisabled =
                         product.product_id.isDelete ||
@@ -123,13 +92,10 @@ const CartPage = () => {
                           <CartItem
                             product={product.product_id}
                             quantity={product.quantity}
-                            onReload={() => setReload((prev) => !prev)}
-                            // bạn có thể truyền thêm prop để CartItem cũng hỗ trợ dark mode nếu cần
                           />
-
                           <input
                             type="checkbox"
-                            className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            className="w-5 h-5"
                             onChange={() =>
                               handleCheckboxChange(product.product_id)
                             }
@@ -163,7 +129,6 @@ const CartPage = () => {
                       </dt>
                       <dd>{originalTotal.toLocaleString("vi-VN")}</dd>
                     </dl>
-
                     <dl className="flex items-center justify-between gap-4">
                       <dt className="text-base font-normal text-gray-500 dark:text-white">
                         Giảm giá
@@ -173,7 +138,6 @@ const CartPage = () => {
                       </dd>
                     </dl>
                   </div>
-
                   <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                     <dt className="text-base font-bold">Tổng tiền</dt>
                     <dd className="text-base font-bold">
@@ -188,14 +152,13 @@ const CartPage = () => {
                 >
                   Thanh toán
                 </button>
-
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                     hoặc
                   </span>
                   <a
                     href="/product"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
+                    className="text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
                   >
                     Tiếp tục mua sắm
                   </a>

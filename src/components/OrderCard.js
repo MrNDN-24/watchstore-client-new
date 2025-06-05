@@ -8,12 +8,15 @@ const OrderCard = (order) => {
   const [products, setProducts] = useState([]);
   const [isCancelling, setCancelling] = useState(false);
 
+  const currentOrder = order.order; // để rút gọn cú pháp
+  const paymentMethod = currentOrder?.payment_id?.method;
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const ProductList = Array.isArray(order.order.products)
-          ? order.order.products
-          : [order.order.products];
+        const ProductList = Array.isArray(currentOrder.products)
+          ? currentOrder.products
+          : [currentOrder.products];
         setProducts(ProductList);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -22,14 +25,13 @@ const OrderCard = (order) => {
       }
     };
     fetchProducts();
-  }, [order.order.products]);
+  }, [currentOrder.products]);
 
   const handleCancelOrder = async () => {
     if (isCancelling) return;
     setCancelling(true);
-
     try {
-      await cancelOrder(order.order._id);
+      await cancelOrder(currentOrder._id);
       toast.error("Đơn hàng đã được hủy thành công!");
       window.location.reload();
     } catch (error) {
@@ -40,6 +42,19 @@ const OrderCard = (order) => {
     }
   };
 
+  // ✅ Hàm kiểm tra điều kiện hiển thị nút Hủy
+  const canCancelOrder = () => {
+    const status = currentOrder.deliveryStatus;
+    if (status === "Chờ xử lý") return true;
+    if (
+      (status === "Đã xác nhận" || status === "Đang vận chuyển") &&
+      paymentMethod === "VNPAY"
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -47,24 +62,24 @@ const OrderCard = (order) => {
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm text-gray-500 dark:text-gray-300">
             Ngày đặt hàng:{" "}
-            {new Date(order.order.createdAt).toLocaleDateString("vi-VN", {
+            {new Date(currentOrder.createdAt).toLocaleDateString("vi-VN", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
             })}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-200 font-medium">
-            Mã đơn hàng: {order.order._id}
+            Mã đơn hàng: {currentOrder._id}
           </div>
         </div>
 
         {products.map((product) => (
           <div key={product._id} className="flex items-center gap-4 w-full">
             <ProductOrder
-              order_id={order.order._id}
+              order_id={currentOrder._id}
               product={product.product_id}
               quantity={product.quantity}
-              deliveryStatus={order.order.deliveryStatus}
+              deliveryStatus={currentOrder.deliveryStatus}
               isReviewed={product.isReviewed}
             />
           </div>
@@ -72,10 +87,10 @@ const OrderCard = (order) => {
 
         <div className="mt-4 text-right font-semibold text-lg text-gray-800 dark:text-gray-100">
           <span>Tổng tiền: </span>
-          <span>{order?.order.total_price?.toLocaleString("vi-VN")} VND</span>
+          <span>{currentOrder?.total_price?.toLocaleString("vi-VN")} VND</span>
         </div>
 
-        {order.order.deliveryStatus === "Chờ xử lý" && (
+        {canCancelOrder() && (
           <div className="mt-4 text-right">
             <button
               onClick={handleCancelOrder}
