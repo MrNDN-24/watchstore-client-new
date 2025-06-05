@@ -27,6 +27,14 @@ export const getBlogs = async (search, page, limit) => {
 };
 
 export const getBlogById = async (id) => {
-  const response = await axios.get(`${API_URL}/${id}`);
-  return response.data;
+  try {
+    const token = localStorage.getItem("token"); 
+    const response = await axios.get(`${API_URL}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy chi tiết blog:", error);
+    throw error; 
+  }
 };

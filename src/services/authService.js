@@ -68,3 +68,18 @@ export const resetPassword = async (id, token, newPassword) => {
     throw error; // Ném lỗi để xử lý bên ngoài
   }
 };
+
+export const logoutUser = async (token) => {
+  try {
+    const response = await axios.post(`${API_URL}/logout`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
+};
+
