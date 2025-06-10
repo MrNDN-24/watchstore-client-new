@@ -1,10 +1,12 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getProductImages } from "../services/homeService";
-import { useCart } from "../context/CartContext";
-import { updateCart, deleteProductFromCart } from "../services/cartService";
+import { updateCart } from "../services/cartService";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { updateCartAmount, removeFromCart } from "../redux/slices/cartSlice";
 
 const CartItem = (product) => {
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(product.quantity);
   const [amount, setAmount] = useState(() => {
     return (
@@ -18,10 +20,16 @@ const CartItem = (product) => {
   const [primaryImage, setPrimaryImage] = useState();
   const [isLoading, setLoading] = useState(true);
 
-  const { updateCartAmount } = useCart();
-
+  // Cập nhật tổng tiền và ảnh sản phẩm khi load component
   useEffect(() => {
-    updateCartAmount(product.product._id, amount); // Cập nhật tổng tiền vào context
+    dispatch(
+      updateCartAmount({
+        productId: product.product._id,
+        quantity,
+        amount,
+      })
+    );
+
     const fetchProductImages = async () => {
       try {
         const data = await getProductImages(product.product._id);
@@ -37,6 +45,7 @@ const CartItem = (product) => {
     fetchProductImages();
   }, []);
 
+  // Cập nhật số lượng và tổng tiền khi thay đổi quantity
   useEffect(() => {
     const updateQuantity = async () => {
       try {
@@ -45,20 +54,29 @@ const CartItem = (product) => {
         console.error(error.message || "Có lỗi xảy ra!");
       }
     };
-    updateCartAmount(product.product._id, amount);
+
+    const newAmount =
+      quantity *
+      (product?.product.discount_price > 0
+        ? product.product.discount_price
+        : product.product.price);
+
+    setAmount(newAmount);
+
+    dispatch(
+      updateCartAmount({
+        productId: product.product._id,
+        quantity,
+        amount: newAmount,
+      })
+    );
+
     updateQuantity();
   }, [quantity]);
 
   const handleIncrement = () => {
     if (quantity < product.product.stock) {
-      const newQuantity = quantity + 1;
-      setQuantity(newQuantity);
-      setAmount(
-        newQuantity *
-          (product?.product.discount_price > 0
-            ? product.product.discount_price
-            : product.product.price)
-      );
+      setQuantity((prev) => prev + 1);
     } else {
       toast.error("Đã đạt số lượng giới hạn");
     }
@@ -66,28 +84,21 @@ const CartItem = (product) => {
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
-      setAmount(
-        newQuantity *
-          (product?.product.discount_price > 0
-            ? product.product.discount_price
-            : product.product.price)
-      );
+      setQuantity((prev) => prev - 1);
     }
   };
 
   const handleRemoveProduct = async (product_id) => {
     try {
-      const result = await deleteProductFromCart(product_id);
-      if (result.success) {
+      const resultAction = await dispatch(removeFromCart(product_id));
+      if (removeFromCart.fulfilled.match(resultAction)) {
         toast.success("Xoá sản phẩm thành công");
-        // Nếu muốn cập nhật lại danh sách cart ở CartPage thì nên dispatch fetchCart từ context hoặc redux
       } else {
         toast.error("Lỗi khi xóa sản phẩm");
       }
     } catch (error) {
-      console.error(error.message || "Có lỗi xảy ra!");
+      console.error("Xảy ra lỗi:", error);
+      toast.error("Có lỗi xảy ra!");
     }
   };
 

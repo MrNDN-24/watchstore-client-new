@@ -1,18 +1,18 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getProductById, getProductImages } from "../services/productService";
 import ProductList from "./ProductList";
 import Star from "../components/Star";
 import ProductReview from "./ProductReview";
-import { updateCart } from "../services/cartService";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useCart } from "../context/CartContext";
 import {
   addFavourite,
   removeFavourite,
   getFavourites,
 } from "../services/favouriteService";
+import { addToCart } from "../redux/slices/cartSlice";
 
 const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -21,15 +21,14 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
-  const { addToCart } = useCart();
   const [filter, setFilter] = useState({});
   const [isFavourite, setIsFavourite] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-
         const data = await getProductById(id);
         setProduct(data);
         if (data.product.brand_id) {
@@ -64,17 +63,19 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleUpdateCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
     try {
       setLoading(true);
-
-      const result = await updateCart(id, qty);
-      addToCart(product);
-      if (result.success) {
-        toast.success("Thêm vào giỏ hàng thành công!");
-      }
+      await dispatch(addToCart({ product_id: id, quantity: qty })).unwrap();
+      toast.success("Thêm vào giỏ hàng thành công!");
     } catch (error) {
-      console.error(error.message || "Có lỗi xảy ra!");
-      toast.error("Cập nhật giỏ hàng thất bại. Vui lòng thử lại!");
+      console.error("Error adding to cart:", error);
+      toast.error(error || "Thêm vào giỏ hàng thất bại. Vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
@@ -97,7 +98,6 @@ const ProductDetail = () => {
         toast.success("Đã xóa khỏi danh sách yêu thích");
       }
     } catch (error) {
-      // Nếu lỗi axios, error.response có thể có thông tin lỗi từ server
       toast.error(
         error.response?.data?.message || error.message || "Lỗi không xác định"
       );
@@ -111,6 +111,8 @@ const ProductDetail = () => {
       </div>
     );
   }
+
+  const isOutOfStock = product.product.stock <= 0;
 
   return (
     <div>
@@ -244,6 +246,7 @@ const ProductDetail = () => {
                 className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 p-2 rounded-md mt-2 ml-2 text-gray-900 dark:text-gray-100"
                 onChange={(e) => setQty(Number(e.target.value))}
                 value={qty}
+                disabled={isOutOfStock}
               >
                 {[...Array(product.product.stock).keys()].map((num) => (
                   <option key={num + 1} value={num + 1}>
@@ -264,13 +267,19 @@ const ProductDetail = () => {
                 {isFavourite ? "Bỏ yêu thích ♥" : "Thêm vào yêu thích ♡"}
               </button>
 
-              <button
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-md text-lg font-semibold"
-                onClick={handleUpdateCart}
-                disabled={isLoading}
-              >
-                Thêm vào giỏ hàng
-              </button>
+              {isOutOfStock ? (
+                <span className="flex-1 bg-gray-400 text-white py-3 rounded-md text-lg font-semibold text-center">
+                  Hết hàng
+                </span>
+              ) : (
+                <button
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-md text-lg font-semibold"
+                  onClick={handleUpdateCart}
+                  disabled={isLoading}
+                >
+                  Thêm vào giỏ hàng
+                </button>
+              )}
             </div>
           </div>
         </div>

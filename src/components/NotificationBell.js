@@ -23,7 +23,12 @@ const NotificationBell = () => {
         const id = decoded.userId || decoded.id || decoded._id;
         setUserId(id);
 
-        const socketInstance = io("http://localhost:5000");
+        // Kết nối đến socket server
+        const socketInstance = io(
+          `${process.env.REACT_APP_SOCKET_URL || "http://localhost:5000"}`
+        );
+
+        // const socketInstance = io("http://localhost:5000");
         socketInstance.emit("join", id);
         setSocket(socketInstance);
 

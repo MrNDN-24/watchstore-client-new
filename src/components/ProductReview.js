@@ -12,11 +12,12 @@ const ProductReview = (product_id) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+        console.log("Fetching reviews for product ID:", product_id.productId);
         setLoading(true);
         const data = await getProductReviews(
           currentPage,
           5,
-          product_id.product_id
+          product_id.productId
         );
         setReviews(data.data.content);
         setPageSize(data.data.pagination.pageSize);

@@ -3,7 +3,7 @@ import "../styles/Navbar.css";
 import logo from "../assets/WatchThis_transparent-.png";
 import { MdShoppingCart, MdAccountCircle, MdFavorite } from "react-icons/md";
 import { getProducts } from "../services/productService";
-import { getFavourites } from "../services/favouriteService";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import SearchItem from "./SearchItem";
@@ -15,8 +15,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
   const [showMenu, setShowMenu] = useState(false);
-
-  const [favouriteCount, setFavouriteCount] = useState(0);
+  const cartItems = useSelector((state) => state.cart.items);
+  const totalQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   // Theme toggle
   useEffect(() => {
@@ -59,7 +62,6 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { getCartItemCount, cartItems } = useCart();
 
   const handleSearchChange = async (event) => {
     const value = event.target.value;
@@ -201,9 +203,9 @@ const Navbar = () => {
           onClick={() => navigate("/cart")}
         >
           <MdShoppingCart className="w-6 h-6 text-black dark:text-white" />
-          {cartItems.length > 0 && (
+          {totalQuantity > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
-              {cartItems.length}
+              {totalQuantity}
             </span>
           )}
         </div>
