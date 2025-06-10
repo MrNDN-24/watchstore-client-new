@@ -277,7 +277,9 @@ const BlogDetailPage = () => {
                 >
                   <div className="flex flex-col items-center w-16">
                     <img
-                      src={comment.userId?.avatar || "/default-avatar.png"}
+                      src={
+                        comment.userId?.avatar || "../assets/user_avatar.jpg"
+                      }
                       alt="avatar"
                       className="w-12 h-12 rounded-full object-cover shadow"
                     />

@@ -21,6 +21,9 @@ const FavouriteList = () => {
           discount_price: 0,
           product_rating: 0,
           description: "Không có mô tả",
+          isDelete: false,
+          isActive: true,
+          stock: 0,
           ...product,
         }));
 
@@ -75,20 +78,31 @@ const FavouriteList = () => {
           Danh sách yêu thích
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {favourites.map((product) => (
-            <div
-              key={product._id}
-              className="flex flex-col items-center dark:bg-gray-800 bg-gray-100 p-4 rounded shadow"
-            >
-              <ProductCard product={product} />
-              <button
-                onClick={() => handleRemove(product._id)}
-                className="mt-2 text-gray-700 dark:text-gray-300 text-sm px-4 py-1 rounded hover:underline hover:cursor-pointer flex items-center gap-1"
+          {favourites.map((product) => {
+            const isDisabled = product.isDelete || !product.isActive;
+            const isOutOfStock = product.stock === 0;
+            return (
+              <div
+                key={product._id}
+                className={`flex flex-col items-center dark:bg-gray-800 bg-gray-100 p-4 rounded shadow relative ${
+                  isDisabled ? "opacity-50" : ""
+                }`}
               >
-                <span className="font-bold">✕</span> Xóa sản phẩm
-              </button>
-            </div>
-          ))}
+                {isOutOfStock && (
+                  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
+                    Hết hàng
+                  </span>
+                )}
+                <ProductCard product={product} />
+                <button
+                  onClick={() => handleRemove(product._id)}
+                  className="mt-2 text-gray-700 dark:text-gray-300 text-sm px-4 py-1 rounded hover:underline hover:cursor-pointer flex items-center gap-1"
+                >
+                  <span className="font-bold">✕</span> Xóa sản phẩm
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

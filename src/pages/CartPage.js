@@ -21,6 +21,29 @@ const CartPage = () => {
     dispatch(fetchCart());
   }, [dispatch]);
 
+  useEffect(() => {
+    let discountPrice = 0;
+    let originalPrice = 0;
+
+    products
+      .filter((product) => selectedProducts.includes(product.product_id))
+      .forEach((product) => {
+        const qty = product.quantity || 0;
+        const original = product.product_id.price;
+        const discounted =
+          product.product_id.discount_price === 0
+            ? product.product_id.price
+            : product.product_id.discount_price;
+
+        originalPrice += qty * original;
+        discountPrice += qty * discounted;
+      });
+
+    setOriginalTotal(originalPrice);
+    setSavingValue(originalPrice - discountPrice);
+    setSelectedProductTotal(discountPrice);
+  }, [products, selectedProducts]);
+
   const handleCheckboxChange = (productId) => {
     setSelectedProducts((prevSelected) => {
       const updatedSelected = prevSelected.includes(productId)

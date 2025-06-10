@@ -24,7 +24,10 @@ const FavouriteIcon = () => {
         setUserId(id);
 
         // Khởi tạo socket
-        const socketInstance = io("http://localhost:5000");
+        const socketUrl =
+          process.env.REACT_APP_SOCKET_URL || "http://localhost:5000";
+        const socketInstance = io(socketUrl);
+        // const socketInstance = io("http://localhost:5000");
         socketInstance.emit("join", id);
         setSocket(socketInstance);
 
