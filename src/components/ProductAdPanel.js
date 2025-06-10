@@ -64,7 +64,7 @@ const ProductAdPanel = () => {
           )}
 
           <img
-            src={product.image_ids?.[0]?.image_url || "/default.jpg"}
+            src={product.image_url || "/default.jpg"}
             alt={product.name}
             className="w-full max-h-60 object-contain bg-white rounded-t-xl"
           />

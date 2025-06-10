@@ -93,6 +93,7 @@ export const getProducts = async (page_number, limit, filters) => {
 export const getTopSellingProduct = async () => {
   try {
     const response = await axios.get(`${API_URL}/product-ad/top-selling`);
+    console.log("hehehe",response.data)
     return response.data; // giả sử trả về 1 sản phẩm
   } catch (error) {
     console.error("Lỗi khi lấy sản phẩm bán chạy:", error);
