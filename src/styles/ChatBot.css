@@ -9,7 +9,6 @@
 
 .container {
   width: 100%;
-  min-height: 100vh;
   padding: 20px;
 }
 
@@ -27,6 +26,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  z-index: 1000;
 }
 
 #chatbot-toggler span {
@@ -54,7 +54,7 @@
   opacity: 0;
   pointer-events: none;
   width: 420px;
-  max-height: 80vh;
+  height: calc(100vh - 180px); /* Thay đổi từ max-height sang height */
   background: #fff;
   border-radius: 16px;
   box-shadow: 
@@ -66,6 +66,7 @@
   transform: scale(0.2);
   transform-origin: bottom right;
   transition: all 0.1s ease;
+  z-index: 999;
 }
 
 .container.show-chatbot .chatbot-popup {
@@ -75,12 +76,13 @@
 }
 
 .chat-header {
-  padding: 12px 20px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #2FDDA0;
   color: white;
+  flex-shrink: 0;
 }
 
 .header-info {
@@ -90,18 +92,19 @@
 }
 
 .header-info svg {
-  width: 36px;
-  height: 36px;
-  padding: 8px;
+  width: 28px;
+  height: 28px;
+  padding: 6px;
   background: white;
   border-radius: 50%;
   fill: #2FDDA0;
 }
 
 .logo-text {
-  font-size: 1.25rem;
+
   font-weight: 600;
-  margin-top: 14px;
+    font-size: 1rem;
+  margin-top: 10px;
 }
 
 .chat-header button {
@@ -119,10 +122,8 @@
 
 .chat-body {
   flex: 1;
-  min-height: 420px;
-  max-height: 60vh;
-  padding: 24px;
   overflow-y: auto;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -201,6 +202,7 @@
   padding: 16px 24px;
   background: white;
   border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
 }
 
 .chat-form {
@@ -264,4 +266,27 @@
 
 .chat-form .message-input:valid ~ button {
   display: block !important;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 600px) {
+  .chatbot-popup {
+    width: calc(100% - 40px);
+    right: 20px;
+    bottom: 80px;
+    height: calc(100vh - 160px);
+  }
+  
+  #chatbot-toggler {
+    right: 20px;
+    bottom: 20px;
+  }
+  
+  .chat-body {
+    padding: 16px;
+  }
+  
+  .chat-footer {
+    padding: 12px 16px;
+  }
 }

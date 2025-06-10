@@ -57,7 +57,7 @@ const ChatBot = () => {
       const userId = decoded.userId || decoded._id || decoded.id;
       setCustomerId(userId);
       console.log("Decoded userId:", userId);
-      socketRef.current = io("http://localhost:5000");
+      socketRef.current = io(process.env.REACT_APP_SOCKET_URL);
       socketRef.current.emit("join", userId);
 
       // Lắng nghe event
@@ -100,19 +100,37 @@ const ChatBot = () => {
           })();
         }
       );
-      // ** Lắng nghe event closed **
-      socketRef.current.on("conversation:closed", (data) => {
-        console.log("Cuộc trò chuyện đã bị đóng:", data);
+      // Lắng nghe khi khách rời hàng chờ
+      socketRef.current.on("conversation:closed:leftQueue", (data) => {
+        console.log("Cuộc trò chuyện đóng do khách rời hàng chờ:", data);
         setChatHistory((prev) => [
           ...prev,
           {
             role: "model",
-            text: "🔴 Cuộc trò chuyện đã kết thúc bởi nhân viên hỗ trợ. Nếu cần, bạn có thể bắt đầu lại hoặc hỏi trợ giúp khác.",
+            text: `🔴 ${
+              data.message ||
+              "Cuộc trò chuyện đã bị đóng do bạn rời khỏi hàng chờ."
+            }`,
           },
         ]);
         setSupportConversationId(null);
         setIsWaitingForSupport(false);
       });
+
+      // Lắng nghe khi nhân viên/admin đóng thủ công
+      socketRef.current.on("conversation:closed:manual", (data) => {
+        console.log("Cuộc trò chuyện đóng thủ công:", data);
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            role: "model",
+            text: `🔴 ${data.message || "Cuộc trò chuyện đã được đóng."}`,
+          },
+        ]);
+        setSupportConversationId(null);
+        setIsWaitingForSupport(false);
+      });
+
       socketRef.current.on("receive_message", (message) => {
         console.log("Nhận tin nhắn từ nhân viên:", message);
 
@@ -290,47 +308,14 @@ const ChatBot = () => {
       }
     }
 
-    // === Hủy chờ hỗ trợ ===
-    if (
-      /hủy chờ|thoát hàng chờ|không cần tư vấn|ngừng chờ/i.test(userMessage)
-    ) {
-      console.log("==== DEBUG HỦY CHỜ ====");
-      console.log("supportConversationId:", supportConversationId);
-      console.log("isWaitingForSupport:", isWaitingForSupport);
-
-      if (supportConversationId) {
-        try {
-          console.log("Bắt đầu removeFromQueue");
-          await removeFromQueue(customerId);
-          console.log("Đã remove khỏi queue");
-
-          console.log("Bắt đầu closeConversation");
-          await closeConversation(supportConversationId);
-          console.log("Đã đóng cuộc hội thoại");
-
-          setSupportConversationId(null);
-          // setIsWaitingForSupport(false);
-          updateHistory("✅ Bạn đã hủy chờ thành công...");
-        } catch (error) {
-          console.error("Lỗi khi hủy chờ:", error);
-          updateHistory("⚠️ Lỗi khi hủy chờ, vui lòng thử lại sau.", true);
-        }
-      } else {
-        console.log("Không vào được if, điều kiện không thỏa.");
-        updateHistory(
-          "❌ Bạn hiện không ở trong hàng chờ hoặc không có cuộc trò chuyện nào đang hoạt động."
-        );
-      }
-      return;
-    }
-
-    // Trả lời nếu người dùng hỏi về mã giảm giá / hạng khách hàng
     const containsDiscountKeyword =
       /(mã giảm giá|voucher|chương trình giảm|ưu đãi|khuyến mãi|rank|hạng khách hàng)/i.test(
         userMessage
       );
+
     if (containsDiscountKeyword) {
       const token = localStorage.getItem("token");
+      console.log("Token:", token); // Kiểm tra token có tồn tại không
       if (!token) {
         updateHistory(
           "🔒 Vui lòng đăng nhập để xem các chương trình ưu đãi dành riêng cho bạn."
@@ -339,9 +324,15 @@ const ChatBot = () => {
       }
 
       try {
+        console.log("Fetching user data...");
         const profile = await fetchUserData();
-        const discountData = await getDiscounts();
+        console.log("Profile:", profile); 
+        console.log("Fetching discount data...");
+     const discountData = await getDiscounts({ type: "ongoing" });
+        console.log("Discount Data:", discountData); 
+
         if (!profile || !discountData) {
+          console.log("Profile or Discount Data is null/undefined");
           updateHistory(
             "⚠️ Không thể lấy thông tin ưu đãi hiện tại. Vui lòng thử lại sau."
           );
@@ -349,7 +340,9 @@ const ChatBot = () => {
         }
 
         const rank = profile.rank || "bronze";
+        console.log("User Rank:", rank); // Kiểm tra hạng của người dùng
         const currentDiscounts = discountData.ongoingDiscounts || [];
+        console.log("Current Discounts:", currentDiscounts); // Kiểm tra danh sách ưu đãi
 
         if (currentDiscounts.length === 0) {
           updateHistory(
@@ -366,7 +359,7 @@ const ChatBot = () => {
                   currency: "VND",
                 }).format(d.discountValue)
               : "?";
-
+            console.log(`Discount ${idx + 1}:`, d); // Kiểm tra từng chương trình giảm giá
             return `🎁 ${idx + 1}. ${
               d.programName
             } - Giảm ${formattedValue} - HSD đến ${new Date(
@@ -380,6 +373,7 @@ const ChatBot = () => {
         );
         return;
       } catch (err) {
+        console.error("Error in fetching discounts:", err); // Log chi tiết lỗi
         updateHistory("🚨 Có lỗi khi lấy dữ liệu chương trình giảm giá.", true);
         return;
       }
@@ -602,6 +596,11 @@ const ChatBot = () => {
             sendMessage={sendMessage}
             customerId={customerId}
             supportStaffId={supportStaffId}
+            isWaitingForSupport={isWaitingForSupport}
+            removeFromQueue={removeFromQueue}
+            setSupportConversationId={setSupportConversationId}
+            setIsWaitingForSupport={setIsWaitingForSupport}
+            closeConversation={closeConversation}
           />
         </div>
       </div>
