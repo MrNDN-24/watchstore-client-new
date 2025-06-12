@@ -86,7 +86,7 @@ const ProductAdPanel = () => {
                     </span>
                   </span>
                   <span className="bg-white text-orange-500 px-4 py-2 text-sm font-bold rounded-md shadow">
-                    {discount.programName}
+                    {discount.code}
                   </span>
                 </div>
                 <p className="text-xs italic text-white">

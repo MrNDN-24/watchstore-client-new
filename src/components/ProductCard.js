@@ -9,8 +9,6 @@ const ProductCard = ({ product }) => {
   const [primaryImage, setPrimaryImage] = useState();
   const [isLoading, setLoading] = useState(true);
 
-  console.log("ProductCard product:", product);
-
   useEffect(() => {
     if (!product?._id) return;
     const fetchProductImages = async () => {
