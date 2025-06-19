@@ -56,12 +56,12 @@ const ProductList = ({ limit, filter }) => {
             currentPage={currentPage}
           />
 
-          <button
+          {/* <button
             className="mt-8 px-12 py-3 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-300 rounded-md transition-colors cursor-pointer text-lg w-[200px] text-center font-medium"
             onClick={goToProductPage}
           >
             Xem thêm
-          </button>
+          </button> */}
         </>
       )}
     </div>

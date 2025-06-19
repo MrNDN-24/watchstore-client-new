@@ -295,7 +295,7 @@ const ChatBot = () => {
           }
         } else {
           updateHistory(
-            "🔄 Bạn đang được kết nối với nhân viên hỗ trợ, vui lòng chờ phản hồi."
+            "🔄 Bạn đang được kết nối với nhân viên hỗ trợ, vui lòng chờ phản hồi.\nNếu bạn không còn nhu cầu tư vấn, vui lòng nhắn **huỷ chờ** để thoát khỏi hàng đợi."
           );
         }
         return;
@@ -326,10 +326,10 @@ const ChatBot = () => {
       try {
         console.log("Fetching user data...");
         const profile = await fetchUserData();
-        console.log("Profile:", profile); 
+        console.log("Profile:", profile);
         console.log("Fetching discount data...");
-     const discountData = await getDiscounts({ type: "ongoing" });
-        console.log("Discount Data:", discountData); 
+        const discountData = await getDiscounts({ type: "ongoing" });
+        console.log("Discount Data:", discountData);
 
         if (!profile || !discountData) {
           console.log("Profile or Discount Data is null/undefined");

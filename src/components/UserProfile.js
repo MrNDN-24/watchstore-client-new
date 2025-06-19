@@ -229,6 +229,19 @@ const UserProfile = () => {
               <div className="mt-6">
                 {renderField("Số điện thoại", "phone", loggedInUser.phone)}
               </div>
+              <div className="mt-6">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-medium dark:text-gray-200 text-gray-700">
+                    Rank:
+                  </span>
+                  <span className="dark:text-gray-300 text-gray-600">
+                    {loggedInUser.rank
+                      ? loggedInUser.rank.charAt(0).toUpperCase() +
+                        loggedInUser.rank.slice(1)
+                      : ""}
+                  </span>
+                </div>
+              </div>
 
               {isEditing && (
                 <>

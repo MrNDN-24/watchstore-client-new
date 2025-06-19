@@ -307,28 +307,30 @@ const LoginPage = () => {
                 Hoặc đăng nhập bằng
               </p>
 
-              <div className="google-login-container">
+              <div className="mt-5 flex flex-col items-center w-full space-y-3">
+                {/* Nút Google */}
                 <GoogleLogin
                   onSuccess={handleGoogleLoginSuccess}
                   onError={handleGoogleLoginFailure}
                   useOneTap={false}
                   render={(renderProps) => (
                     <button
-                      className="google-login-button"
                       onClick={renderProps.onClick}
+                      className="w-full max-w-sm flex items-center justify-center gap-2 py-3 px-4 rounded-md border border-gray-300 bg-white text-gray-800 font-medium hover:bg-gray-100 transition"
                     >
-                      <i className="fab fa-google"></i> Đăng nhập với Google
+                      <i className="fab fa-google text-lg"></i>
+                      Đăng nhập với Google
                     </button>
                   )}
                 />
-              </div>
-              <div className="facebook-login-container">
+
+                {/* Nút Facebook */}
                 <button
-                  className="facebook-login-button"
                   onClick={handleFacebookLogin}
+                  className="flex items-center justify-center gap-2 py-2 px-4 rounded-md bg-[#1877f2] text-white font-medium hover:bg-[#155db8] transition"
                 >
-                  <i className="fab fa-facebook mr-2"></i> Đăng nhập với
-                  Facebook
+                  <i className="fab fa-facebook text-lg"></i>
+                  Đăng nhập với Facebook
                 </button>
               </div>
             </div>

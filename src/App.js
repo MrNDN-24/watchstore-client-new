@@ -26,12 +26,14 @@ import { ToastContainer } from "react-toastify";
 
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
+import ChatBot from "./components/ChatBot";
 
 function App() {
   return (
     <CartProvider>
       <Router>
         <ScrollToTop />
+        
         <Routes>
           <Route path="/" element={<Navigate to="/homepage" />} />{" "}
           {/* Chuyển hướng đến "/homepage" */}
@@ -57,6 +59,7 @@ function App() {
           <Route path="/blogs/:id" element={<BlogDetailPage />} />
           <Route path="/favourite" element={<FavouritePage />} />
         </Routes>
+        <ChatBot/>
       </Router>
     </CartProvider>
   );

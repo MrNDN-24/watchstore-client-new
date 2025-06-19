@@ -32,7 +32,7 @@ const OrderCard = (order) => {
     setCancelling(true);
     try {
       await cancelOrder(currentOrder._id);
-      toast.error("Đơn hàng đã được hủy thành công!");
+      toast.success("Đơn hàng đã được hủy thành công!");
       window.location.reload();
     } catch (error) {
       console.error("Error cancelling order:", error);
@@ -47,7 +47,7 @@ const OrderCard = (order) => {
     const status = currentOrder.deliveryStatus;
     if (status === "Chờ xử lý") return true;
     if (
-      (status === "Đã xác nhận" || status === "Đang vận chuyển") &&
+      (status === "Đã xác nhận") &&
       paymentMethod === "VNPAY"
     ) {
       return true;

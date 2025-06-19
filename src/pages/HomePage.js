@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -11,17 +10,9 @@ import panel1 from "../assets/panel1.jpg";
 import ProductList from "../components/ProductList";
 import Brands from "../components/Brands";
 import StoreDetail from "../components/StoreDetail";
-import ChatBot from "../components/ChatBot";
 import ProductAdPanel from "../components/ProductAdPanel";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   const slides = [banner1, banner2, banner3];
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -88,7 +79,7 @@ const HomePage = () => {
         <ProductList limit={5} filter={{ sortBy: "createdAt" }} />
       </main>
 
-      <ChatBot />
+   
       <Footer />
     </div>
   );

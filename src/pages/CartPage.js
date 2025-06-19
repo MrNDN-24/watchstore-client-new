@@ -31,7 +31,8 @@ const CartPage = () => {
         const qty = product.quantity || 0;
         const original = product.product_id.price;
         const discounted =
-          product.product_id.discount_price === 0
+          product.product_id.discount_price === 0 ||
+          product.product_id.discount_price == null
             ? product.product_id.price
             : product.product_id.discount_price;
 

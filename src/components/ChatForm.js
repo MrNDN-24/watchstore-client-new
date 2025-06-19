@@ -116,7 +116,8 @@ const ChatForm = ({
         ...history,
         {
           role: "model",
-          text: "🔄 Bạn đang được kết nối với nhân viên hỗ trợ, vui lòng chờ phản hồi.",
+          text:  
+            "🔄 Bạn đang được kết nối với nhân viên hỗ trợ, vui lòng chờ phản hồi.\nNếu bạn không còn nhu cầu tư vấn, vui lòng nhắn **huỷ chờ** để thoát khỏi hàng đợi.",
         },
       ]);
       return;
